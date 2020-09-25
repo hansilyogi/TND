@@ -3,8 +3,8 @@ var router = express.Router();
 var model = require('../model/test.model');
 const { param } = require('./users');
 
-/* GET home page. */
-router.post('/', function(req, res, next) {
+/* GET home page. */ 
+router.post('/', async function(req, res, next) {
   console.log(req.body);
   if(req.body.type == "insert"){
     
@@ -21,15 +21,6 @@ router.post('/', function(req, res, next) {
   }
   else{
     res.status(404).send("404 ERROR");
-    //res.send()
-    // var collection = req.app.locals.collection;
-    // collection.find({}).toArray(function(err,data){
-    // if(err) throw err;
-    
-    // console.log(data);
-    // res.send(data);
-    
-  //});
   }
 
   //res.render('index', { title: 'Express' });

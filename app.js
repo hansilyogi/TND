@@ -10,6 +10,8 @@ var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var formRouter = require('./routes/form_demo');
+var personRouter = require('./routes/personal_info');
+var loginRouter = require('./routes/login');
 
 var app = express();
 
@@ -27,6 +29,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/api/form', formRouter);
+app.use('/api/person', personRouter);
+app.use('/api/login', loginRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -42,7 +46,7 @@ app.use(function(req, res, next) {
 //   app.locals.collection = collection; 
 // });
 
-mongoose.connect('mongodb://localhost:27017/registration_db',{
+mongoose.connect('mongodb+srv://root:root@cluster0.s73xs.mongodb.net/test',{
   useNewUrlParser : true,
   useUnifiedTopology : true
 });

@@ -15,7 +15,6 @@ router.post('/',function(req,res,next){
     res.sendFile("/home/monil/Front/directory.html");
 });
 
-
 router.get('/',function(req,res,next){
     res.sendFile("/home/monil/Front/index.html");
 });
