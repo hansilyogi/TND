@@ -22,7 +22,7 @@ router.post('/', async function(req, res, next) {
     });
     console.log(record);
     record.save();
-    return res.status(200).send({success: true, data: record});
+    return res.status(200).send({success: true, Message : "Registration Successfull"});
   }
   else{
     res.status(404).send("404 ERROR");
