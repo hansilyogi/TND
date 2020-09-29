@@ -48,7 +48,8 @@ app.use(function(req, res, next) {
 
 mongoose.connect('mongodb+srv://root:root@cluster0.s73xs.mongodb.net/test',{
   useNewUrlParser : true,
-  useUnifiedTopology : true
+  useUnifiedTopology : true,
+  useFindAndModify: false 
 });
 
 // error handler
