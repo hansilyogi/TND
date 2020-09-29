@@ -1,21 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var model = require('../model/test.model');
-
-// router.post('/',function(req,res,next){
-//     console.log(req.body);
-//     if(req.body.type == "login"){
-//         var record = new model({
-//             mobile : req.body.mobile
-//         });
-//         console.log(record);
-//         record.save();
-//         return res.status(200).send({success: true, data: record});
-//     }
-//     else{
-//         res.status(404).send("404 ERROR")
-//     }
-// });
+//Access-Control-Allow-Origin
 
 router.post('/',async function(req,res){
 

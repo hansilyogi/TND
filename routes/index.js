@@ -5,24 +5,24 @@ const { param } = require('./users');
 var fs = require('fs');
 var path = require('path');
 var multer = require('multer');
-
+const isEmpty = require('lodash.isempty');
 /* GET home page. */ 
 router.post('/', async function(req, res, next) {
-  console.log(req.body);
-  if(req.body.type == "insert"){
+
+  if(isEmpty(req.body)){
+    res.status(404).send("404 ERROR");
+  }
+  else{
     var record = new model({
       name : req.body.name,
       mobile : req.body.mobile,
       email : req.body.email,
       company_name : req.body.company_name,
-      referred_by : req.body.referred_by
+      referred_by : req.body.referred_by  
     });
     console.log(record);
     record.save();
     return res.status(200).send({success: true, Message : "Registration Successfull"});
-  }
-  else{
-    res.status(404).send("404 ERROR");
   }
 
   //res.render('index', { title: 'Express' });
