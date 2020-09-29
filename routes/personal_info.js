@@ -34,11 +34,9 @@ router.get('/',async function(req,res,next){
       return res.status(200).json(result);
     }
   });
-  //data = JSON.stringify(record);
-  //res.json(record);
 });
 
-/* POST Personal Directory. */
+/* POST Personal Information Directory. */
 router.post('/:name',upload.single('img'), function(req, res, next) {
   var name = req.params.name;
   console.log(name);
