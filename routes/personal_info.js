@@ -16,7 +16,27 @@ var storage = multer.diskStorage({
   } 
 }); 
 
-var upload = multer({ storage: storage }); 
+var upload = multer({ storage: storage });
+
+router.get('/',async function(req,res,next){
+  var record = await model.find({},function(err,data){
+    var result = {};
+    if(err){
+      result.Message= "Not Found.";
+      result.Data = [];
+      result.isSuccess = false;
+      return res.status(404).json(result);
+    }
+    else{
+      result.Message= "Found.";
+      result.Data = data;
+      result.isSuccess = true;
+      return res.status(200).json(result);
+    }
+  });
+  //data = JSON.stringify(record);
+  //res.json(record);
+});
 
 /* POST Personal Directory. */
 router.post('/:name',upload.single('img'), function(req, res, next) {
