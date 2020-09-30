@@ -13,11 +13,7 @@ var newSchema = mongoose.Schema({
     spouse_name : { type: String },
     spouse_birth_date : { type: Date },
     number_of_child : { type: Number },
-    img: 
-    { 
-        data: String,
-        contentType: String 
-    },
+    img : { type: String },
     keyword : [{ type: String }],
     business_category : { type: String},
     experience : { type:String },

@@ -78,10 +78,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     spouse_name : req.body.spouse_name,
     spouse_birth_date : req.body.spouse_birth_date,
     number_of_child : req.body.number_of_child,
-    img: { 
-        data: 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename, 
-        contentType: 'image/png'
-      },
+    img:'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename,
     keyword: req.body.keyword,
     business_category: req.body.business_category,
     experience: req.body.experience,
@@ -98,10 +95,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     spouse_name : record.spouse_name,
     spouse_birth_date : record.spouse_birth_date,
     number_of_child : record.number_of_child,
-    img: { 
-      data: 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename, 
-      contentType: 'image/png'
-    },
+    img: 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename,
     keyword: record.keyword,
     keyword: record.keyword,
     business_category: record.business_category,
