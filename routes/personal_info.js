@@ -37,6 +37,9 @@ router.get('/',async function(req,res,next){
 });
 
 /* POST Personal Information Directory. */
+// router.post('/',function(req,res,next){
+//   console.log(req.body.name);
+// });
 router.post('/:name',upload.single('img'), function(req, res, next) {
   var name = req.params.name;
   console.log(name);
@@ -78,7 +81,12 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     img: { 
         data: 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename, 
         contentType: 'image/png'
-      }
+      },
+    keyword: req.body.keyword,
+    business_category: req.body.business_category,
+    experience: req.body.experience,
+    about_business: req.body.about_business,
+    achievement: req.body.achievement
   });
 
   console.log(record);
@@ -93,7 +101,13 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     img: { 
       data: 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/'+uniqueFilename, 
       contentType: 'image/png'
-    }
+    },
+    keyword: record.keyword,
+    keyword: record.keyword,
+    business_category: record.business_category,
+    experience: record.experience,
+    about_business: record.about_business,
+    achievement: record.achievement
   },(err,record)=>{
     var result = {};
     if(err){
