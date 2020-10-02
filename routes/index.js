@@ -6,8 +6,9 @@ var fs = require('fs');
 var path = require('path');
 var multer = require('multer');
 const isEmpty = require('lodash.isempty');
-/* GET home page. */ 
-router.post('/', async function(req, res, next) {
+
+/* POST Registration (http://localhost:3000/registration) */ 
+router.post('/registration', async function(req, res, next) {
 
   if(isEmpty(req.body)){
     res.status(404).send("404 ERROR");
@@ -24,24 +25,16 @@ router.post('/', async function(req, res, next) {
     record.save();
     return res.status(200).send({success: true, Message : "Registration Successfull"});
   }
-
-  //res.render('index', { title: 'Express' });
 });
 
-router.get('/:id',async function(req,res){
+router.get('/registration/:id',async function(req,res){
   var name = req.params.id;
-  // var name = req.body.name;
   var query = { name : name };  
-  // var record = await model.findById(name,{});
+ 
   var record = await model.find(query);
   console.log(record);
   res.json(record);
-  // if(record){
-  //   res.status(200).send(`Found Records : ${json(record)}`);
-  // }
-  // else{
-  //   res.status(404).send("404 ERROR");
-  // }
+  
 });
 
 module.exports = router;
