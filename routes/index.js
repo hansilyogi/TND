@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var cors = require("cors");
 var model = require('../model/test.model');
 const { param } = require('./users');
 var fs = require('fs');
