@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var formRouter = require('./routes/form_demo');
 var personRouter = require('./routes/personal_info');
 var loginRouter = require('./routes/login');
+var registrationRouter = require('./routes/registration');
 
 var app = express();
 
@@ -27,6 +28,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/api/registration',registrationRouter);
 app.use('/users', usersRouter);
 app.use('/api/form', formRouter);
 app.use('/api/person', personRouter);
