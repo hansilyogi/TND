@@ -24,7 +24,7 @@ router.post('/', async function(req, res, next) {
     });
     console.log(record);
     record.save();
-    return res.status(200).send({success: true, Message : "Registration Successfull"});
+    return res.status(200).send({success: true, Message : "Registration Successfull" , Data: record});
   }
 });
 
