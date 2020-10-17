@@ -6,15 +6,18 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 var MongoClient = require('mongodb').MongoClient;
 var mongoose = require('mongoose');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var formRouter = require('./routes/form_demo');
 var personRouter = require('./routes/personal_info');
 var loginRouter = require('./routes/login');
 var registrationRouter = require('./routes/registration');
+var adminRouter = require('./routes/admin');
+var directoryRouter = require('./routes/directoryList');
 
 var app = express();
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -30,9 +33,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/api/registration',registrationRouter);
 app.use('/users', usersRouter);
-app.use('/api/form', formRouter);
 app.use('/api/person', personRouter);
 app.use('/api/login', loginRouter);
+app.use('/admin', adminRouter);
+app.use('/directory', directoryRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

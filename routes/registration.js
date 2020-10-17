@@ -40,6 +40,4 @@ router.get('/registration/:id',async function(req,res){
 
 module.exports = router;
 
-
-
 //git remote add origin git@github.com:VENDETTA-STACK/blog-vlog.git

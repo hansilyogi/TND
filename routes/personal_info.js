@@ -38,9 +38,7 @@ router.get('/',async function(req,res,next){
 });
 
 /* POST Personal Information Directory. */
-// router.post('/',function(req,res,next){
-//   console.log(req.body.name);
-// });
+
 router.post('/:name',upload.single('img'), function(req, res, next) {
   var name = req.params.name;
   console.log(name);
@@ -69,7 +67,6 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // return image details
         var image_data = json(image);
         console.log(image_data);
-        //res.json(image);
       }
     )
   }
@@ -136,7 +133,6 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         result.isSuccess = true;
         return res.status(200).json(result);
       }
-      //return res.json(result);
     });
   }else{
     model.findOneAndUpdate({name:req.params.name},{
@@ -166,7 +162,6 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         result.isSuccess = true;
         return res.status(200).json(result);
       }
-      //return res.json(result);
     });
   }
 

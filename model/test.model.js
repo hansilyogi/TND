@@ -18,8 +18,8 @@ var newSchema = mongoose.Schema({
     business_category : { type: String},
     experience : { type:String },
     about_business : { type:String },
-    achievement : { type:String }
-
+    achievement : { type:String },
+    status : { type:String }
 });
 
-module.exports = mongoose.model("test",newSchema);
+module.exports = mongoose.model("UsersList",newSchema);
