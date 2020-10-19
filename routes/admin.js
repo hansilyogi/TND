@@ -40,13 +40,23 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
     const file = req.file;
     //console.log(imageData);
     try {
-        var newsData = await new newsDataSchema({
-            newsType : newsType,
-            content : content,
-            newsDate : newsDate,
-            headline : headline,
-            newsImage : file.path
-        });
+        if(req.file){
+            var newsData = await new newsDataSchema({
+                newsType : newsType,
+                content : content,
+                newsDate : newsDate,
+                headline : headline,
+                newsImage : file.path
+            });
+        }else{
+            newsData = await new newsDataSchema({
+                newsType : newsType,
+                content : content,
+                newsDate : newsDate,
+                headline : headline
+            });
+        }
+        
         let newsDataStore = await newsData.save();
         console.log(newsDataStore);
         res.status(200).json({ Message: "News Added Successfully...!!!", Data: newsDataStore, IsSuccess: true });
@@ -56,17 +66,24 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
 });
 
 router.post('/updatenews', async function(req , res, next){
+    console.log(req.body);
     const id = req.body.id;
-    const file = req.file;
-    const { newsType , content , newsDate , headline , newsImage } = req.body;
+    //const file = req.file;
+    const { newsType , content , headline } = req.body;
     try {
-        let updateNewsData = {
-            newsType : newsType,
-            content : content,
-            newsDate : newsDate,
-            headline : headline,
-            newsImage : file.path
-        };
+        if(req.file){
+            var updateNewsData = {
+                newsType : newsType,
+                content : content,
+                headline : headline,
+            };
+        }else{
+            updateNewsData = {
+                newsType : newsType,
+                content : content,
+                headline : headline
+            };
+        }
         console.log(updateNewsData);
         let data = await newsDataSchema.findByIdAndUpdate(id,updateNewsData);
         res.status(200).json({ Message: "News Data Updated!", Data: data, IsSuccess: true });
