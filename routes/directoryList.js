@@ -13,7 +13,7 @@ router.post('/directorylisting', async function(req , res , next){
             res.status(400).json({ Message: "Data Not Found...!!!", IsSuccess: false });
         }
     } catch (error) {
-        res.status(500).json({ Message: "Something Wrong...!!!", IsSuccess: false });
+        res.status(500).json({ Message: error.message, IsSuccess: false });
     }
 });
 

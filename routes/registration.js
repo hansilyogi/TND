@@ -24,7 +24,7 @@ router.post('/', async function(req, res, next) {
     });
     console.log(record);
     record.save();
-    return res.status(200).send({success: true, Message : "Registration Successfull" , Data: [record]});
+    return res.status(200).send({ IsSuccess: true, Message : "Registration Successfull" , Data: [record]});
   }
 });
 
@@ -35,9 +35,9 @@ router.get('/registration/:id',async function(req,res){
   var record = await model.find(query);
   console.log(record);
   if(record){
-    res.status(200).json({ isSuccess: true , Data: [record] , Message: "Data Found" });
+    res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Found" });
   }else{
-    res.status(400).json({ isSuccess: false , Data: 0 , Message: "Data not found" });
+    res.status(400).json({ IsSuccess: false , Data: 0 , Message: "Data not found" });
   }
 });
 

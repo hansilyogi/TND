@@ -5,11 +5,26 @@ var multer = require('multer');
 var fs = require('fs');
 const path = require('path');
 
-newsDataSchema = require('../model/newsCategory.js');
+var newsCategorySchema = require('../model/newsCategory.js');
 var bannerSchema = require('../model/bannerModel');
 var offerSchema = require('../model/offerModel');
+var newsModelSchema = require('../model/newsModel');
+var successStorySchema = require('../model/successStoryModel');
+var eventSchema = require('../model/eventModel');
 
-var newImageData = multer.diskStorage({
+var newCategoryImage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/newsCategoryPic");   
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
+var newsImage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "uploads/newsPictures");   
     },
@@ -45,9 +60,36 @@ var offerBannerlocation = multer.diskStorage({
     },
 });
 
-var uploadNewsImg = multer({ storage: newImageData });
+var successStorylocation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/successStory");
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
+var eventlocation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/eventsPic");
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
+var uploadCategoryImg = multer({ storage: newCategoryImage });
+var uploadNewsImg = multer({ storage: newsImage });
 var uploadbanner = multer({ storage: bannerlocation });
 var uploadOfferbanner = multer({ storage: offerBannerlocation });
+var uploadSuccessStory = multer({ storage: successStorylocation });
+var uploadEvent = multer({ storage: eventlocation });
 
 router.post('/adminlogin',async function(req,res,next){
     const { username , password } = req.body;
@@ -63,24 +105,45 @@ router.post('/adminlogin',async function(req,res,next){
     }
 });
 
+router.post("/addNewsCategory" , uploadCategoryImg.single("categoryImage") , async function(req,res,next){
+    const { newsType , newsDate , categoryImage } = req.body;
+    const file = req.file;
+    try {
+        var record = await new newsCategorySchema({
+            newsType: newsType,
+            newsDate: newsDate,
+            categoryImage: file == undefined ? null : file.path,
+        });
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Category Added" });
+            await record.save();
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "News Category Not Added"});
+        }
+    } catch (error) {
+        res.status(500).json({ Message: error.message , IsSuccess: false });
+    }
+});
+
 router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,res,next){
-    const { newsType , content , newsDate , headline , newsImage } = req.body;
+    const { newsType , content , newsDate , headline , newsImage , trending , bookmark} = req.body;
     const file = req.file;
     //console.log(imageData);
     try {
+        var newsData;
         if(req.file){
-            var newsData = await new newsDataSchema({
+            newsData = await new newsModelSchema({
                 newsType : newsType,
                 content : content,
-                newsDate : newsDate,
+                //newsDate : newsDate,
                 headline : headline,
                 newsImage : file.path
             });
         }else{
-            newsData = await new newsDataSchema({
+            newsData = await new newsModelSchema({
                 newsType : newsType,
                 content : content,
-                newsDate : newsDate,
+                //newsDate : newsDate,
                 headline : headline
             });
         }
@@ -89,7 +152,7 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
         console.log(newsDataStore);
         res.status(200).json({ Message: "News Added Successfully...!!!", Data: [newsDataStore], IsSuccess: true });
     } catch (error) {
-        res.status(400).json({ Message: "Something Wrong...!!!", IsSuccess: false });
+        res.status(400).json({ Message: error.message, IsSuccess: false });
     }
 });
 
@@ -113,24 +176,24 @@ router.post('/updatenews', async function(req , res, next){
             };
         }
         console.log(updateNewsData);
-        let data = await newsDataSchema.findByIdAndUpdate(id,updateNewsData);
+        let data = await newsModelSchema.findByIdAndUpdate(id,updateNewsData);
         res.status(200).json({ Message: "News Data Updated!", Data: [data], IsSuccess: true });
     } catch (error) {
-        res.status(400).json({ Message: "Something Wrong...!!!", IsSuccess: false });
+        res.status(400).json({ Message: error.message , IsSuccess: false });
     }
 });
 
 router.post('/deletenews', async function(req,res,next){
     const id = req.body.id;
     try {
-        let deleteNews = await newsDataSchema.findByIdAndDelete(id);
+        let deleteNews = await newsModelSchema.findByIdAndDelete(id);
         if(deleteNews != null){
             res.status(200).json({ IsSuccess : true , Data: 1 , Message : "Data Deleted...!!!" });
         }else{
             res.status(400).json({ IsSuccess : false , Message : "Data Not Found...!!!" });
         }        
     } catch (error) {
-        res.status(500).json({ IsSuccess : false , Data : 0 , Message : "Something Wrong...!!!" });
+        res.status(500).json({ IsSuccess : false , Data : 0 , Message : error.message });
     } 
 });
 
@@ -263,5 +326,79 @@ router.post("/getOffer" , async function(req,res,next){
         res.status(500).json({ IsSuccess: false , Message: error.message });
     }
 });
+
+router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async function(req,res,next){
+    const { headline , storyImage , storyContent , favorite , date } = req.body; 
+    try {
+        var record = await new successStorySchema({
+            headline: headline,
+            storyImage: storyImage,
+            storyContent: storyContent,
+            favorite: favorite,
+            date: date,
+        });
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Success Story Added" });
+            await record.save();
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Story Not Added" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/getSuccessStory" , async function(req,res,next){
+    try {
+        var record = await successStorySchema.find();
+        console.log(record);
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Success Story Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Story Not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
+    const { eventName , eventImage , eventOrganiseBy , startDte , endDate } = req.body; 
+    const file = req.file;
+    try {
+        var record = await new eventSchema({
+            eventName: eventName,
+            eventImage: file == undefined ? null : file.path,
+            eventOrganiseBy: eventOrganiseBy,
+            startDte: startDte,
+            endDate: endDate,
+        });
+        //console.log(record);
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Event Added" });
+            await record.save();
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/getEvents" , async function(req,res,next){
+    try {
+        var record = await eventSchema.find();
+        console.log(record);
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Events Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Events Not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+
 
 module.exports = router;

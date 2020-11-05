@@ -24,6 +24,9 @@ const offerSchema = mongoose.Schema({
         type: Boolean,
         default: true,
     },
+    newsCategory: {
+        type: mongoose.Types.ObjectId, ref: "NewsCategory",
+    }
 });
 
 module.exports = mongoose.model("offer", offerSchema);

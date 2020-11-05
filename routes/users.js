@@ -16,15 +16,33 @@ router.post("/networking" , async function(req,res,next){
       requestStatus: requestStatus,
     });
     await record.save();
-    // var usersData = await networkSchema.find()
-    //                                    .populate({
-    //                                      path: "UsersList",
-    //                                      select: "name"
-    //                                    });
+    var usersData = await networkSchema.find()
+                                       .populate({
+                                         path: "requestSender",
+                                         select: "name"
+                                       })
+                                       .populate({
+                                        path: "requestReceiver",
+                                        select: "name"
+                                       });
     if(record){
-      res.status(200).json({ IsSuccess: true , Data: record , Message: "Request Send Successfully" });
+      res.status(200).json({ IsSuccess: true , Data: usersData , Message: "Request Send Successfully" });
     }else{
-      res.status(400).json({ IsSuccess: true , Data: record , Message: "Request Sending Failed" });
+      res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Request Sending Failed" });
+    }
+  } catch (error) {
+    res.status(500).json({ IsSuccess: false , Message: error.message });
+  }
+});
+
+router.post("/updateReqStatus" , async function(req,res,next){
+  const { requestId , requestStatus } = req.body;
+  try {
+    var record = await networkSchema.find({ _id: requestId });
+    // console.log(record);
+    if(record.length == 1){
+      let updateIs = await networkSchema.findByIdAndUpdate(requestId,{ requestStatus: requestStatus });
+      res.status(200).json({ IsSuccess: true , Data: 1 , Message: "Request Updated" });
     }
   } catch (error) {
     res.status(500).json({ IsSuccess: false , Message: error.message });

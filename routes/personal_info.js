@@ -23,16 +23,17 @@ router.get('/',async function(req,res,next){
   var record = await model.find({},function(err,data){
     var result = {};
     if(err){
-      result.Message= "Not Found.";
-      result.Data = [];
-      result.isSuccess = false;
-      return res.status(404).json(result);
+      // result.Message= "Not Found.";
+      // result.Data = [];
+      // result.isSuccess = false;
+      // return res.status(404).json(result);
+      res.status(500).json({ IsSuccess: false , Data: [] , Message: "Not Found" });
     }
     else{
-      result.Message= "Found.";
-      result.Data = data;
-      result.isSuccess = true;
-      return res.status(200).json(result);
+      // result.Message= "Found.";
+      // result.Data = data;
+      // result.isSuccess = true;
+      res.status(200).json({ IsSuccess: true , Data: [data] , Message: "Data Found" });
     }
   });
 });
@@ -101,8 +102,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     });
   }
 
-
-  console.log(record);
+  // console.log(record);
 
   if(req.file){
     model.findOneAndUpdate({name:req.params.name},{
@@ -125,13 +125,13 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // result.Message= "Not Found.";
         // result.Data = [];
         // result.isSuccess = false;
-        return res.status(404).json({ isSuccess: false, Data: 0 , Message: err.message});
+        return res.status(404).json({ IsSuccess: false, Data: 0 , Message: err.message});
       }
       else{
         // result.Message= "Found.";
         // result.Data = record;
         // result.isSuccess = true;
-        return res.status(200).json({ isSuccess: true, Data: [record] , Message: "Data Found" });
+        return res.status(200).json({ IsSuccess: true, Data: [record] , Message: "Data Found" });
       }
     });
   }else{
@@ -154,13 +154,13 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // result.Message= "Not Found.";
         // result.Data = [];
         // result.isSuccess = false;
-        return res.status(404).json({ isSuccess: false , Data: 0 , Message: "Not Found"});
+        return res.status(404).json({ IsSuccess: false , Data: 0 , Message: "Not Found"});
       }
       else{
         // result.Message= "Found.";
         // result.Data = record;
         // result.isSuccess = true;
-        return res.status(200).json({ isSuccess: true , Data: [record] , Message: "Found" });
+        return res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Found" });
       }
     });
   }

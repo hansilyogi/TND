@@ -5,16 +5,16 @@ var newsCategorySchema = mongoose.Schema({
         type:String,
         require: true
     },
-    content: {type:String},
+    //content: {type:String},
     newsDate: {
         type:Date,
         default: Date.now
     },
-    headline: {
-        type:String,
-        require: true
-    },
-    newsImage: {
+    // headline: {
+    //     type:String,
+    //     require: true
+    // },
+    categoryImage: {
         type:String
     }
 });
