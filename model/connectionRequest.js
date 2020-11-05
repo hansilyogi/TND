@@ -2,10 +2,10 @@ var mongoose = require('mongoose');
 
 var ConnectionRequest = mongoose.Schema({
     requestSender : [
-        { type: mongoose.Types.ObjectId, ref: "Couriers", default: null },
+        { type: mongoose.Types.ObjectId, ref: "UsersList", default: null },
     ],
     requestReceiver : {
-        type:String
+        type: mongoose.Types.ObjectId, ref: "UsersList", default: null
     },
     requestStatus : {
         type : String

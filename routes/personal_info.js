@@ -122,16 +122,16 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     },(err,record)=>{
       var result = {};
       if(err){
-        result.Message= "Not Found.";
-        result.Data = [];
-        result.isSuccess = false;
-        return res.status(404).json(result);
+        // result.Message= "Not Found.";
+        // result.Data = [];
+        // result.isSuccess = false;
+        return res.status(404).json({ isSuccess: false, Data: 0 , Message: err.message});
       }
       else{
-        result.Message= "Found.";
-        result.Data = record;
-        result.isSuccess = true;
-        return res.status(200).json(result);
+        // result.Message= "Found.";
+        // result.Data = record;
+        // result.isSuccess = true;
+        return res.status(200).json({ isSuccess: true, Data: [record] , Message: "Data Found" });
       }
     });
   }else{
@@ -151,16 +151,16 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
     },(err,record)=>{
       var result = {};
       if(err){
-        result.Message= "Not Found.";
-        result.Data = [];
-        result.isSuccess = false;
-        return res.status(404).json(result);
+        // result.Message= "Not Found.";
+        // result.Data = [];
+        // result.isSuccess = false;
+        return res.status(404).json({ isSuccess: false , Data: 0 , Message: "Not Found"});
       }
       else{
-        result.Message= "Found.";
-        result.Data = record;
-        result.isSuccess = true;
-        return res.status(200).json(result);
+        // result.Message= "Found.";
+        // result.Data = record;
+        // result.isSuccess = true;
+        return res.status(200).json({ isSuccess: true , Data: [record] , Message: "Found" });
       }
     });
   }

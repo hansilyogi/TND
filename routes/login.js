@@ -16,7 +16,7 @@ router.post('/',async function(req,res){
     else{
         var result = {};
         result.Message= " Found.";
-        result.Data = mobile_data;
+        result.Data = [mobile_data];
         result.isSuccess = true;
         res.json(result);
     }
