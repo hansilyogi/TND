@@ -12,6 +12,7 @@ var newsModelSchema = require('../model/newsModel');
 var successStorySchema = require('../model/successStoryModel');
 var eventSchema = require('../model/eventModel');
 const bannerModel = require('../model/bannerModel');
+const { off } = require('../app.js');
 
 var newCategoryImage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -261,7 +262,10 @@ router.post("/getAllBanner" , async function(req,res,next){
 });
 
 router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(req,res,next){
-    const { title , bannerImage , dateTime , type , details ,redeemBy , offerExpire } = req.body;
+    const { title , bannerImage , newsCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
+    var expire = moment(offerExpire);
+    expire = expire.utc().format('YYYY-MM-DD');
+
     try {
         const file = req.file;
         var record = await new offerSchema({
@@ -270,7 +274,8 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             details: details,
             redeemBy: redeemBy,
             bannerImage: file == undefined ? null : file.path,
-            offerExpire: offerExpire,
+            offerExpire: expire,
+            newsCategory: newsCategory,
         });
         await record.save();
         if(record){
@@ -357,9 +362,9 @@ router.post("/deleteOffer" , async function(req,res,next){
 
 router.post("/getOffer" , async function(req,res,next){
     try {
-        var record = await offerSchema.find();
+        var record = await offerSchema.find().populate("newsCategory");
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Offers Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
         }
