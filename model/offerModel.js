@@ -26,6 +26,9 @@ const offerSchema = mongoose.Schema({
     },
     newsCategory: {
         type: mongoose.Types.ObjectId, ref: "NewsCategory",
+    },
+    offerExpire: {
+        type: String
     }
 });
 
