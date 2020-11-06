@@ -400,7 +400,7 @@ router.post("/getSuccessStory" , async function(req,res,next){
         var record = await successStorySchema.find();
         console.log(record);
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Success Story Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Success Story Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Story Not found" });
         }
@@ -437,7 +437,7 @@ router.post("/getEvents" , async function(req,res,next){
         var record = await eventSchema.find();
         console.log(record);
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Events Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Events Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Events Not found" });
         }
