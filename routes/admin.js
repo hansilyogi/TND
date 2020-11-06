@@ -252,7 +252,7 @@ router.post("/getAllBanner" , async function(req,res,next){
     try {
         var record = await bannerModel.find();
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Banner Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Banner Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Banner Available" });
         }
