@@ -37,6 +37,7 @@ app.use('/api/person', personRouter);
 app.use('/api/login', loginRouter);
 app.use('/admin', adminRouter);
 app.use('/directory', directoryRouter);
+app.use("/uploads", express.static(__dirname + "/uploads"));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
