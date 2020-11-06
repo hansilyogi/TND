@@ -116,7 +116,7 @@ router.post("/addNewsCategory" , uploadCategoryImg.single("categoryImage") , asy
             categoryImage: file == undefined ? null : file.path,
         });
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Category Added" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Category Added" });
             await record.save();
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "News Category Not Added"});
@@ -130,7 +130,7 @@ router.post("/getNewsCategory" , async function(req,res,next){
     try {
         var record = await newsCategorySchema.find();
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Category Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Category Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Category Available" });
         }
@@ -164,7 +164,7 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
         
         let newsDataStore = await newsData.save();
         console.log(newsDataStore);
-        res.status(200).json({ Message: "News Added Successfully...!!!", Data: [newsDataStore], IsSuccess: true });
+        res.status(200).json({ Message: "News Added Successfully...!!!", Data: newsDataStore, IsSuccess: true });
     } catch (error) {
         res.status(400).json({ Message: error.message, IsSuccess: false });
     }
@@ -191,7 +191,7 @@ router.post('/updatenews', async function(req , res, next){
         }
         console.log(updateNewsData);
         let data = await newsModelSchema.findByIdAndUpdate(id,updateNewsData);
-        res.status(200).json({ Message: "News Data Updated!", Data: [data], IsSuccess: true });
+        res.status(200).json({ Message: "News Data Updated!", Data: data, IsSuccess: true });
     } catch (error) {
         res.status(400).json({ Message: error.message , IsSuccess: false });
     }
@@ -215,7 +215,7 @@ router.post("/getAllNews" , async function(req,res,next){
     try {
         var record = await newsModelSchema.find();
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
         }
@@ -251,7 +251,7 @@ router.post("/getAllBanner" , async function(req,res,next){
     try {
         var record = await bannerModel.find();
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Banner Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Banner Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Banner Available" });
         }
@@ -274,7 +274,7 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
         await record.save();
         if(record){
             res.status(200)
-               .json({ IsSuccess: true , Data: [record] , Message: "Offer Added" });
+               .json({ IsSuccess: true , Data: record , Message: "Offer Added" });
         }else{
             res.status(400)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Added" });
@@ -311,7 +311,7 @@ router.post("/updateOffer" , async function(req,res,next){
         
         if(record){
             res.status(200)
-               .json({ IsSuccess: true , Data: [record] , Message: "Offer Updated" });
+               .json({ IsSuccess: true , Data: record , Message: "Offer Updated" });
         }else{
             res.status(400)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Update" });
@@ -339,7 +339,7 @@ router.post("/deleteOffer" , async function(req,res,next){
         
         if(record){
             res.status(200)
-               .json({ IsSuccess: true , Data: [record] , Message: "Offer Deleted" });
+               .json({ IsSuccess: true , Data: record , Message: "Offer Deleted" });
         }else{
             res.status(400)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Delete" });
@@ -369,10 +369,11 @@ router.post("/getOffer" , async function(req,res,next){
 
 router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async function(req,res,next){
     const { headline , storyImage , storyContent , favorite , date } = req.body; 
+    const file = req.file;
     try {
         var record = await new successStorySchema({
             headline: headline,
-            storyImage: storyImage,
+            storyImage: file == undefined ? " " : file.path,
             storyContent: storyContent,
             favorite: favorite,
             date: date,

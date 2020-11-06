@@ -15,7 +15,7 @@ var storage = multer.diskStorage({
   filename: (req, file, cb) => { 
       cb(null, file.originalname + '-' + Date.now()) 
   } 
-}); 
+});
 
 var upload = multer({ storage: storage });
 
@@ -160,7 +160,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // result.Message= "Found.";
         // result.Data = record;
         // result.isSuccess = true;
-        return res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Found" });
+        return res.status(200).json({ IsSuccess: true , Data: record , Message: "Found" });
       }
     });
   }
