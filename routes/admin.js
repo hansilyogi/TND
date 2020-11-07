@@ -152,14 +152,19 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
                 content : content,
                 //newsDate : newsDate,
                 headline : headline,
-                newsImage : file.path
+                newsImage : file.path,
+                trending : trending,
+                bookmark : bookmark,
             });
         }else{
             newsData = await new newsModelSchema({
                 newsType : newsType,
                 content : content,
                 //newsDate : newsDate,
-                headline : headline
+                headline : headline,trending : trending,
+                bookmark : bookmark,
+                trending : trending,
+                bookmark : bookmark,
             });
         }
         
