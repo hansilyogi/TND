@@ -214,9 +214,9 @@ router.post('/deletenews', async function(req,res,next){
 
 router.post("/getAllNews" , async function(req,res,next){
     try {
-        var record = await newsModelSchema.find();
+        var record = await newsModelSchema.find().populate("newsType");
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
         }
@@ -224,6 +224,25 @@ router.post("/getAllNews" , async function(req,res,next){
         res.status(500).json({ IsSuccess: false , Message: error.message });
     }
 });
+
+router.post("/getNewsOfCategory" , async function(req,res,next){
+    const id = req.body.id;
+    try {
+        var record = await newsModelSchema.find({ newsType : {_id : id} })
+                                          .populate({
+                                            path: "newsType",
+                                           });
+        // console.log(record);
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 
 router.post("/addBanner" , uploadbanner.single("image"), async function(req,res,next){
     const { title, type } = req.body;
