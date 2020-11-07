@@ -35,9 +35,7 @@ router.post('/', async function(req, res, next) {
       mobile : req.body.mobile,
       email : req.body.email,
       company_name : req.body.company_name,
-      referred_by : req.body.referred_by,
-      business_category : business_category,
-      about_business : about_business,  
+      referred_by : req.body.referred_by,  
     });
     console.log(record);
     record.save();
