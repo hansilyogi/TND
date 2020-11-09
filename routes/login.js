@@ -3,31 +3,21 @@ var router = express.Router();
 var model = require('../model/test.model');
 //Access-Control-Allow-Origin
 
-router.post('/',async function(req,res){
-
-    var mobile_data = await model.findOne({ mobile: req.body.mobile});
-    if(mobile_data.length == 0){
-        // var result = {};
-        // result.Message= "Not Found.";
-        // result.Data = [];
-        // result.isSuccess = false;
-        // res.json(result);
-        res.status(400).json({ IsSuccess: false , Data: [] , Message: "Number Not Register" });
-    }
-    else{
-        // var result = {};
-        // result.Message= " Found.";
-        // result.Data = [mobile_data];
-        // result.isSuccess = true;
-        // res.json(result);
-        res.status(200).json({ IsSuccess: true , Data: [mobile_data] , Message: "User LoggedIn" });
-    }
+router.post('/',async function(req,res,next){
     
-    // console.log(JSON.parse(mobile_data));
-    // var query = { mobile : mobile };  
-    // var record = await model.find(query);
-    // console.log(record);
-    // res.json(record);
+    const mobile = req.body.mobile;
+
+    try {
+        var record = await model.find({ mobile: mobile});
+        if(record.length == 1){
+            res.status(200).json({ IsSuccess: true , Data: 1 , Message: "User LoggedIn" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "User Not Found. PLease Register" });
+        }
+        // console.log(record.length);    
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
   });
 
 module.exports = router;
