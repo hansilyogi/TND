@@ -23,8 +23,8 @@ const offerSchema = mongoose.Schema({
         type: Boolean,
         default: true,
     },
-    newsCategory: {
-        type: mongoose.Types.ObjectId, ref: "NewsCategory",
+    businessCategory: {
+        type: mongoose.Types.ObjectId, ref: "UsersList",
     },
     offerExpire: {
         type: String

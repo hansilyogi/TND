@@ -288,7 +288,7 @@ router.post("/getAllBanner" , async function(req,res,next){
 });
 
 router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(req,res,next){
-    const { title , bannerImage , newsCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
+    const { title , bannerImage , businessCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
     var expire = moment(offerExpire);
     expire = expire.utc().format('MM/DD/YYYY');
     var expireBody = moment(offerExpire);
@@ -316,7 +316,7 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             bannerImage: file == undefined ? null : file.path,
             dateTime: bodyInitialDate,
             offerExpire: expireBody,
-            newsCategory: newsCategory,
+            businessCategory: businessCategory,
             daysRemain: daysRemaining,
         });
         await record.save();
@@ -404,14 +404,10 @@ router.post("/deleteOffer" , async function(req,res,next){
 
 router.post("/getOffer" , async function(req,res,next){
     try {
-        var record = await offerSchema.find().populate("newsCategory");
-        var categoryData = await directoryData.find().select("name business_category");
-        completeOfferData = [{
-            Categories: categoryData,
-            Offers: record
-        }];
+        var record = await offerSchema.find().populate("businessCategory");
+        //var categoryData = await directoryData.find().select("name business_category");
         if(completeOfferData){
-            res.status(200).json({ IsSuccess: true , Data: completeOfferData , Message: "Offers Found" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
         }
@@ -508,6 +504,19 @@ router.post("/getAllBookMarkNews" , async function(req,res,next){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/businessCategory" , async function(req , res ,next){
+    try {
+        var record = await directoryData.find().select("name business_category");
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Business Category Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
