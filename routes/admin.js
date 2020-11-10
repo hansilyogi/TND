@@ -404,9 +404,12 @@ router.post("/deleteOffer" , async function(req,res,next){
 
 router.post("/getOffer" , async function(req,res,next){
     try {
-        var record = await offerSchema.find().populate("businessCategory");
-        //var categoryData = await directoryData.find().select("name business_category");
-        if(completeOfferData){
+        var record = await offerSchema.find()
+                                      .populate({
+                                            path: "businessCategory",
+                                            select: "name company_name business_category mobile email"
+                                        });
+        if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
