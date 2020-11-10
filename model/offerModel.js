@@ -8,8 +8,7 @@ const offerSchema = mongoose.Schema({
         type: String,
     },
     dateTime: {
-        type: Date,
-        default: Date.now,
+        type: String,
     },
     type:{
         type: String,
@@ -28,6 +27,9 @@ const offerSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId, ref: "NewsCategory",
     },
     offerExpire: {
+        type: String
+    },
+    daysRemain: {
         type: String
     }
 });

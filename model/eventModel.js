@@ -9,16 +9,14 @@ var eventSchema = mongoose.Schema({
         type:String
     },
     eventOrganiseBy: {
-        type: mongoose.Types.ObjectId, ref: "UsersList", default: null
+        type: String,
     },
-    startDte: {
-        type: Date,
-        default: Date.now()
-    },
-    endDate: {
-        type: Date,
-        default: Date.now()
-    },
+    startDte: [{
+        type: String,
+    }],
+    endDate: [{
+        type: String,
+    }],
 });
 
 module.exports = mongoose.model("Events",eventSchema);

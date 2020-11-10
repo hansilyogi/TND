@@ -4,6 +4,7 @@ var router = express.Router();
 var multer = require('multer');
 var fs = require('fs');
 const path = require('path');
+var moment = require('moment');
 
 var newsCategorySchema = require('../model/newsCategory.js');
 var bannerSchema = require('../model/bannerModel');
@@ -12,6 +13,7 @@ var newsModelSchema = require('../model/newsModel');
 var successStorySchema = require('../model/successStoryModel');
 var eventSchema = require('../model/eventModel');
 const bannerModel = require('../model/bannerModel');
+var directoryData = require('../model/test.model');
 const { off } = require('../app.js');
 
 var newCategoryImage = multer.diskStorage({
@@ -288,7 +290,16 @@ router.post("/getAllBanner" , async function(req,res,next){
 router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(req,res,next){
     const { title , bannerImage , newsCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
     var expire = moment(offerExpire);
-    expire = expire.utc().format('YYYY-MM-DD');
+    expire = expire.utc().format('DD/MM/YYYY');
+
+    var initialDate = moment(dateTime);
+    initialDate = initialDate.utc().format('DD/MM/YYYY');
+    // console.log(initialDate);
+    // console.log(expire);
+    // console.log(initialDate.getDate());
+
+    // var daysRemaining = ( initialDate.getDate() - expire.getDate() );
+    // console.log(daysRemaining);
 
     try {
         const file = req.file;
@@ -298,8 +309,10 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             details: details,
             redeemBy: redeemBy,
             bannerImage: file == undefined ? null : file.path,
+            dateTime: initialDate,
             offerExpire: expire,
             newsCategory: newsCategory,
+            // daysRemain: daysRemaining,
         });
         await record.save();
         if(record){
@@ -387,8 +400,13 @@ router.post("/deleteOffer" , async function(req,res,next){
 router.post("/getOffer" , async function(req,res,next){
     try {
         var record = await offerSchema.find().populate("newsCategory");
-        if(record){
-            res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
+        var categoryData = await directoryData.find().select("name business_category");
+        completeOfferData = [{
+            Categories: categoryData,
+            Offers: record
+        }];
+        if(completeOfferData){
+            res.status(200).json({ IsSuccess: true , Data: completeOfferData , Message: "Offers Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
         }
@@ -436,13 +454,20 @@ router.post("/getSuccessStory" , async function(req,res,next){
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
     const { eventName , eventImage , eventOrganiseBy , startDte , endDate } = req.body; 
     const file = req.file;
+    var initialDateTime = moment(startDte);
+    var endDateTime = moment(endDate);
+    var initialDate = initialDateTime.utc().format('DD/MM/YYYY');
+    var initialTime = initialDateTime.utc().format('h:mm a');
+    var end_Date = endDateTime.utc().format('DD/MM/YYYY');
+    var end_Time = endDateTime.utc().format('h:mm a');
+    
     try {
         var record = await new eventSchema({
             eventName: eventName,
             eventImage: file == undefined ? null : file.path,
             eventOrganiseBy: eventOrganiseBy,
-            startDte: startDte,
-            endDate: endDate,
+            startDte: [initialDate , initialTime],
+            endDate: [end_Date , end_Time],
         });
         //console.log(record);
         if(record){
@@ -470,6 +495,18 @@ router.post("/getEvents" , async function(req,res,next){
     }
 });
 
-
+router.post("/getAllBookMarkNews" , async function(req,res,next){
+    try {
+        var record = await newsModelSchema.find({ bookmark: true }).populate("newsType");
+        // console.log(record);
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
 
 module.exports = router;
