@@ -171,7 +171,7 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
         }
         
         let newsDataStore = await newsData.save();
-        console.log(newsDataStore);
+
         res.status(200).json({ Message: "News Added Successfully...!!!", Data: [newsDataStore], IsSuccess: true });
     } catch (error) {
         res.status(400).json({ Message: error.message, IsSuccess: false });
@@ -290,15 +290,20 @@ router.post("/getAllBanner" , async function(req,res,next){
 router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(req,res,next){
     const { title , bannerImage , newsCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
     var expire = moment(offerExpire);
-    expire = expire.utc().format('DD/MM/YYYY');
+    expire = expire.utc().format('MM/DD/YYYY');
+    var expireBody = moment(offerExpire);
+    expireBody = expireBody.utc().format('DD/MM/YYYY');
 
     var initialDate = moment(dateTime);
-    initialDate = initialDate.utc().format('DD/MM/YYYY');
-    // console.log(initialDate);
-    // console.log(expire);
-    // console.log(initialDate.getDate());
+    initialDate = initialDate.utc().format('MM/DD/YYYY');
 
-    // var daysRemaining = ( initialDate.getDate() - expire.getDate() );
+    var bodyInitialDate = moment(dateTime);
+    bodyInitialDate = bodyInitialDate.utc().format('DD/MM/YYYY');
+
+    let date1 = new Date(initialDate);
+    let date2 = new Date(expire);
+
+    var daysRemaining = Math.abs( date1.getDate() - date2.getDate() );
     // console.log(daysRemaining);
 
     try {
@@ -309,10 +314,10 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             details: details,
             redeemBy: redeemBy,
             bannerImage: file == undefined ? null : file.path,
-            dateTime: initialDate,
-            offerExpire: expire,
+            dateTime: bodyInitialDate,
+            offerExpire: expireBody,
             newsCategory: newsCategory,
-            // daysRemain: daysRemaining,
+            daysRemain: daysRemaining,
         });
         await record.save();
         if(record){
