@@ -6,7 +6,10 @@ var directoryData = require('../model/test.model');
 
 router.post('/directorylisting', async function(req , res , next){
     try {
-        let directoryList = await directoryData.find();
+        let directoryList = await directoryData.find()
+                                               .populate({
+                                                   path: "business_category",
+                                               });
         if(directoryList != null){
             res.status(200).json({ Message: "Data Found...!!!", Count : directoryList.length , Data: directoryList, IsSuccess: true });
         }else{

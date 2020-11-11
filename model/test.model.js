@@ -18,7 +18,10 @@ var newSchema = mongoose.Schema({
         default: "/uploads/users/default-profile.jpg", 
     },
     keyword : [{ type: String }],
-    business_category : { type: String},
+    business_category : { 
+        type: mongoose.Types.ObjectId,
+        ref: "BusinessCategory"
+    },
     experience : { type:String },
     about_business : { type:String },
     achievement : { type:String },

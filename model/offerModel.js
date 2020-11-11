@@ -24,7 +24,7 @@ const offerSchema = mongoose.Schema({
         default: true,
     },
     businessCategory: {
-        type: mongoose.Types.ObjectId, ref: "UsersList",
+        type: mongoose.Types.ObjectId, ref: "BusinessCategory",
     },
     offerExpire: {
         type: String

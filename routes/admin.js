@@ -14,6 +14,7 @@ var successStorySchema = require('../model/successStoryModel');
 var eventSchema = require('../model/eventModel');
 const bannerModel = require('../model/bannerModel');
 var directoryData = require('../model/test.model');
+var businessCategorySchema = require('../model/businessCategoryModel');
 const { off } = require('../app.js');
 
 var newCategoryImage = multer.diskStorage({
@@ -88,12 +89,25 @@ var eventlocation = multer.diskStorage({
     },
 });
 
+var businessCategorylocation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/businessCategory");
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
 var uploadCategoryImg = multer({ storage: newCategoryImage });
 var uploadNewsImg = multer({ storage: newsImage });
 var uploadbanner = multer({ storage: bannerlocation });
 var uploadOfferbanner = multer({ storage: offerBannerlocation });
 var uploadSuccessStory = multer({ storage: successStorylocation });
 var uploadEvent = multer({ storage: eventlocation });
+var uploadBusinessCategory = multer({ storage: businessCategorylocation });
 
 router.post('/adminlogin',async function(req,res,next){
     const { username , password } = req.body;
@@ -232,6 +246,40 @@ router.post("/getAllNews" , async function(req,res,next){
     }
 });
 
+router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImage") , async function(req,res,next){
+    const { categoryName , categoryImage , dateTime } = req.body;
+    const file = req.file;
+    try {
+        var record = await new businessCategorySchema({
+            categoryName: categoryName,
+            categoryImage: file == undefined ? "" : file.path,
+            dateTime: dateTime
+        });
+        if(record){
+            await record.save();
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Added" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Not Added" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/businessCategory" , async function(req , res ,next){
+    try {
+        var record = await businessCategorySchema.find();
+        
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Business Category Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 router.post("/getNewsOfCategory" , async function(req,res,next){
     const id = req.body.id;
     try {
@@ -239,7 +287,7 @@ router.post("/getNewsOfCategory" , async function(req,res,next){
                                           .populate({
                                             path: "newsType",
                                            });
-        // console.log(record);
+        
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
@@ -337,6 +385,26 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
     }
 });
 
+router.post("/getOfferOfBusiness" , async function(req,res,next){
+    const { businessCategory_id } = req.body;
+    try {
+        var record  = await offerSchema.find({ businessCategory: { _id: businessCategory_id } })
+                                       .populate({
+                                           path: "businessCategory",
+                                       });
+        // console.log(record);
+        if(record){
+            res.status(200)
+               .json({ IsSuccess: true , Data: record , Message: "Offer Found" });
+        }else{
+            res.status(400)
+               .json({ IsSuccess: true , Data: 0 , Message: "Offer not Found" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 router.post("/updateOffer" , async function(req,res,next){
     var {  id, title , bannerImage , dateTime , type , details ,redeemBy } = req.body;
     console.log(req.body);
@@ -407,7 +475,6 @@ router.post("/getOffer" , async function(req,res,next){
         var record = await offerSchema.find()
                                       .populate({
                                             path: "businessCategory",
-                                            select: "name company_name business_category mobile email"
                                         });
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
@@ -507,19 +574,6 @@ router.post("/getAllBookMarkNews" , async function(req,res,next){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
-        }
-    } catch (error) {
-        res.status(500).json({ IsSuccess: false , Message: error.message });
-    }
-});
-
-router.post("/businessCategory" , async function(req , res ,next){
-    try {
-        var record = await directoryData.find().select("name business_category");
-        if(record){
-            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Found" });
-        }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Business Category Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
