@@ -11,12 +11,18 @@ var eventSchema = mongoose.Schema({
     eventOrganiseBy: {
         type: String,
     },
-    startDte: [{
+    startDate: {
         type: String,
-    }],
-    endDate: [{
+    },
+    endDate: {
         type: String,
-    }],
+    },
+    startTime: {
+        type: String,
+    },
+    endTime: {
+        type: String,
+    }
 });
 
 module.exports = mongoose.model("Events",eventSchema);

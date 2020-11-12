@@ -226,7 +226,7 @@ router.post('/deletenews', async function(req,res,next){
         if(deleteNews != null){
             res.status(200).json({ IsSuccess : true , Data: 1 , Message : "Data Deleted...!!!" });
         }else{
-            res.status(400).json({ IsSuccess : false , Message : "Data Not Found...!!!" });
+            res.status(400).json({ IsSuccess : false , Data: 0 , Message : "Data Not Found...!!!" });
         }        
     } catch (error) {
         res.status(500).json({ IsSuccess : false , Data : 0 , Message : error.message });
@@ -523,26 +523,30 @@ router.post("/getSuccessStory" , async function(req,res,next){
 });
 
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
-    const { eventName , eventImage , eventOrganiseBy , startDte , endDate } = req.body; 
+    const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
+             startTime, endTime } = req.body; 
+
     const file = req.file;
-    var initialDateTime = moment(startDte);
-    var endDateTime = moment(endDate);
-    var initialDate = initialDateTime.utc().format('DD/MM/YYYY');
-    var initialTime = initialDateTime.utc().format('h:mm a');
-    var end_Date = endDateTime.utc().format('DD/MM/YYYY');
-    var end_Time = endDateTime.utc().format('h:mm a');
+    // var initialDateTime = moment(startDate);
+    // var endDateTime = moment(endDate);
+    // var initialDate = initialDateTime.utc().format('DD/MM/YYYY');
+    // var initialTime = initialDateTime.utc().format('h:mm a');
+    // var end_Date = endDateTime.utc().format('DD/MM/YYYY');
+    // var end_Time = endDateTime.utc().format('h:mm a');
     
     try {
         var record = await new eventSchema({
             eventName: eventName,
             eventImage: file == undefined ? null : file.path,
             eventOrganiseBy: eventOrganiseBy,
-            startDte: [initialDate , initialTime],
-            endDate: [end_Date , end_Time],
+            startDate: startDate,
+            startTime: startTime,
+            endDate: endDate,
+            endTime: endTime,
         });
         //console.log(record);
         if(record){
-            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Event Added" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Event Added" });
             await record.save();
         }else{
             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
