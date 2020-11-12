@@ -522,6 +522,38 @@ router.post("/getSuccessStory" , async function(req,res,next){
     }
 });
 
+// router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
+//     const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
+//             startFromTime , startToTime, endFromTime , endToTime } = req.body; 
+
+//     const file = req.file;
+//     var initialDateTime = moment(startDate);
+//     var endDateTime = moment(endDate);
+//     var initialDate = initialDateTime.utc().format('DD/MM/YYYY');
+//     var initialTime = initialDateTime.utc().format('h:mm a');
+//     var end_Date = endDateTime.utc().format('DD/MM/YYYY');
+//     var end_Time = endDateTime.utc().format('h:mm a');
+    
+//     try {
+//         var record = await new eventSchema({
+//             eventName: eventName,
+//             eventImage: file == undefined ? null : file.path,
+//             eventOrganiseBy: eventOrganiseBy,
+//             startDate: [initialDate , initialTime],
+//             endDate: [end_Date , end_Time],
+//         });
+//         //console.log(record);
+//         if(record){
+//             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Event Added" });
+//             await record.save();
+//         }else{
+//             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
+//         }
+//     } catch (error) {
+//         res.status(500).json({ IsSuccess: false , Message: error.message });
+//     }
+// });
+
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
     const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
              startTime, endTime } = req.body; 

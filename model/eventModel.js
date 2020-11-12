@@ -11,12 +11,12 @@ var eventSchema = mongoose.Schema({
     eventOrganiseBy: {
         type: String,
     },
-    startDate: {
+    startDate: [{
         type: String,
-    },
-    endDate: {
+    }],
+    endDate: [{
         type: String,
-    },
+    }],
     startTime: {
         type: String,
     },
