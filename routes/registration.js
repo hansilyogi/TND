@@ -45,7 +45,7 @@ router.post('/', async function(req, res, next) {
 
 //add personal Information
 router.post("/updatePersonal" , uploadUserProfile.single("img") , async function(req,res,next){
-  const { id , date_of_birth , gender, address , spouse_name , spouse_birth_date , achievement ,
+  const { id , name , email , mobile , company_name , referred_by , date_of_birth , gender, address , spouse_name , spouse_birth_date , achievement ,
           number_of_child , img , keyword , business_category , experience , about_business ,
         } = req.body;
   const file = req.file;
@@ -55,6 +55,11 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
   spouse_dob = spouse_dob.utc().format('YYYY-MM-DD');
   try {
     var update = {
+      name : name,
+      mobile : mobile,
+      email : email,
+      company_name : company_name,
+      referred_by : referred_by,
       date_of_birth: dob,
       gender: gender,
       address: address,
