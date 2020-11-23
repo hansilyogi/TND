@@ -11,6 +11,10 @@ const businessCategorySchema = mongoose.Schema({
         type: Date,
         default: Date.now()
     },
+    Users: {
+        type: mongoose.Types.ObjectId, 
+        ref: "UsersList",
+    },
 });
 
 module.exports = mongoose.model("BusinessCategory", businessCategorySchema);

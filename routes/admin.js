@@ -5,6 +5,7 @@ var multer = require('multer');
 var fs = require('fs');
 const path = require('path');
 var moment = require('moment');
+const mongoose = require("mongoose");
 
 var newsCategorySchema = require('../model/newsCategory.js');
 var bannerSchema = require('../model/bannerModel');
@@ -278,6 +279,20 @@ router.post("/businessCategory" , async function(req , res ,next){
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
     }
+});
+
+router.post("/usersInBusinessCategory" , async function(req,res,next){
+    const { businessCategory_id } = req.body;
+    try {
+        var record = await directoryData.find({ business_category: mongoose.Types.ObjectId(businessCategory_id) });
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Users Found" });
+        }else{
+            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Empty UserList" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    } 
 });
 
 router.post("/getNewsOfCategory" , async function(req,res,next){

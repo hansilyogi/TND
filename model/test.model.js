@@ -15,7 +15,7 @@ var newSchema = mongoose.Schema({
     number_of_child : { type: Number },
     img : { 
         type: String,
-        default: "/uploads/users/default-profile.jpg", 
+        default: "uploads/users/default-profile.jpg", 
     },
     keyword : [{ type: String }],
     business_category : { 
