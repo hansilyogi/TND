@@ -4,7 +4,10 @@ Schema = mongoose.Schema;
 var newSchema = mongoose.Schema({
     name: { type: String },
     email: { type: String },
-    mobile: { type: String },
+    mobile: { 
+        type: String,
+        unique: true, 
+    },
     company_name: { type: String },
     referred_by: { type: String },
     date_of_birth : { type: String },

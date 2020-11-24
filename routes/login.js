@@ -10,9 +10,9 @@ router.post('/',async function(req,res,next){
     try {
         var record = await model.find({ mobile: mobile});
         if(record.length == 1){
-            res.status(200).json({ IsSuccess: true , Data: 1 , Message: "User LoggedIn" });
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "User LoggedIn" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "User Not Found. PLease Register" });
+            res.status(400).json({ IsSuccess: true , Data: [] , Message: "User Not Found. PLease Register" });
         }
         // console.log(record.length);    
     } catch (error) {
