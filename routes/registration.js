@@ -90,7 +90,7 @@ router.get('/registration/:id',async function(req,res){
   if(record){
     res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Found" });
   }else{
-    res.status(400).json({ IsSuccess: false , Data: 0 , Message: "Data not found" });
+    res.status(200).json({ IsSuccess: false , Data: 0 , Message: "Data not found" });
   }
 });
 

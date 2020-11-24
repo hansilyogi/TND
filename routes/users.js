@@ -28,7 +28,7 @@ router.post("/networking" , async function(req,res,next){
     if(record){
       res.status(200).json({ IsSuccess: true , Data: usersData , Message: "Request Send Successfully" });
     }else{
-      res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Request Sending Failed" });
+      res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Request Sending Failed" });
     }
   } catch (error) {
     res.status(500).json({ IsSuccess: false , Message: error.message });

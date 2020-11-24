@@ -12,7 +12,7 @@ router.post('/',async function(req,res,next){
         if(record.length == 1){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "User LoggedIn" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: [] , Message: "User Not Found. PLease Register" });
+            res.status(200).json({ IsSuccess: true , Data: [] , Message: "User Not Found. PLease Register" });
         }
         // console.log(record.length);    
     } catch (error) {

@@ -125,7 +125,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // result.Message= "Not Found.";
         // result.Data = [];
         // result.isSuccess = false;
-        return res.status(404).json({ IsSuccess: false, Data: 0 , Message: err.message});
+        return res.status(200).json({ IsSuccess: false, Data: 0 , Message: err.message});
       }
       else{
         // result.Message= "Found.";
@@ -154,7 +154,7 @@ router.post('/:name',upload.single('img'), function(req, res, next) {
         // result.Message= "Not Found.";
         // result.Data = [];
         // result.isSuccess = false;
-        return res.status(404).json({ IsSuccess: false , Data: 0 , Message: "Not Found"});
+        return res.status(200).json({ IsSuccess: false , Data: 0 , Message: "Not Found"});
       }
       else{
         // result.Message= "Found.";

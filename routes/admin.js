@@ -115,12 +115,12 @@ router.post('/adminlogin',async function(req,res,next){
 
     try {
         if( req.body.username=="admin003" && req.body.password == "admin" ){
-            res.status(201).json({ IsSuccess : true , Data: 1 , Message : "Admin LoggedIn...!!!" });
+            res.status(200).json({ IsSuccess : true , Data: 1 , Message : "Admin LoggedIn...!!!" });
         }else{
-            res.status(500).json({ IsSuccess : false , Message : "Credential Mismatched...!!!" });
+            res.status(200).json({ IsSuccess : false , Message : "Credential Mismatched...!!!" });
         }
     } catch (error) {
-        res.status(400).json({ IsSuccess : false , Message : "Something Wrong...!!!" });
+        res.status(500).json({ IsSuccess : false , Message : "Something Wrong...!!!" });
     }
 });
 
@@ -137,7 +137,7 @@ router.post("/addNewsCategory" , uploadCategoryImg.single("categoryImage") , asy
             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Category Added" });
             await record.save();
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "News Category Not Added"});
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "News Category Not Added"});
         }
     } catch (error) {
         res.status(500).json({ Message: error.message , IsSuccess: false });
@@ -150,7 +150,7 @@ router.post("/getNewsCategory" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Category Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Category Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Category Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -189,7 +189,7 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
 
         res.status(200).json({ Message: "News Added Successfully...!!!", Data: [newsDataStore], IsSuccess: true });
     } catch (error) {
-        res.status(400).json({ Message: error.message, IsSuccess: false });
+        res.status(500).json({ Message: error.message, IsSuccess: false });
     }
 });
 
@@ -216,7 +216,7 @@ router.post('/updatenews', async function(req , res, next){
         let data = await newsModelSchema.findByIdAndUpdate(id,updateNewsData);
         res.status(200).json({ Message: "News Data Updated!", Data: data, IsSuccess: true });
     } catch (error) {
-        res.status(400).json({ Message: error.message , IsSuccess: false });
+        res.status(500).json({ Message: error.message , IsSuccess: false });
     }
 });
 
@@ -227,7 +227,7 @@ router.post('/deletenews', async function(req,res,next){
         if(deleteNews != null){
             res.status(200).json({ IsSuccess : true , Data: 1 , Message : "Data Deleted...!!!" });
         }else{
-            res.status(400).json({ IsSuccess : false , Data: 0 , Message : "Data Not Found...!!!" });
+            res.status(200).json({ IsSuccess : false , Data: 0 , Message : "Data Not Found...!!!" });
         }        
     } catch (error) {
         res.status(500).json({ IsSuccess : false , Data : 0 , Message : error.message });
@@ -240,7 +240,7 @@ router.post("/getAllNews" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -260,7 +260,7 @@ router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImag
             await record.save();
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Added" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Not Added" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Not Added" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -274,7 +274,7 @@ router.post("/businessCategory" , async function(req , res ,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Business Category Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Business Category Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -288,7 +288,7 @@ router.post("/usersInBusinessCategory" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Users Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Empty UserList" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Empty UserList" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -306,7 +306,7 @@ router.post("/getNewsOfCategory" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -343,7 +343,7 @@ router.post("/getAllBanner" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Banner Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Banner Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Banner Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -387,7 +387,7 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             res.status(200)
                .json({ IsSuccess: true , Data: [record] , Message: "Offer Added" });
         }else{
-            res.status(400)
+            res.status(200)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Added" });
         }
     } catch (error) {
@@ -412,7 +412,7 @@ router.post("/getOfferOfBusiness" , async function(req,res,next){
             res.status(200)
                .json({ IsSuccess: true , Data: record , Message: "Offer Found" });
         }else{
-            res.status(400)
+            res.status(200)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Found" });
         }
     } catch (error) {
@@ -444,7 +444,7 @@ router.post("/updateOffer" , async function(req,res,next){
             res.status(200)
                .json({ IsSuccess: true , Data: record , Message: "Offer Updated" });
         }else{
-            res.status(400)
+            res.status(200)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Update" });
         }
     } catch (error) {
@@ -472,7 +472,7 @@ router.post("/deleteOffer" , async function(req,res,next){
             res.status(200)
                .json({ IsSuccess: true , Data: record , Message: "Offer Deleted" });
         }else{
-            res.status(400)
+            res.status(200)
                .json({ IsSuccess: true , Data: 0 , Message: "Offer not Delete" });
         }
     } catch (error) {
@@ -494,7 +494,7 @@ router.post("/getOffer" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Offers Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Offer" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -516,7 +516,7 @@ router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async
             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Success Story Added" });
             await record.save();
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Story Not Added" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Story Not Added" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -530,7 +530,7 @@ router.post("/getSuccessStory" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Success Story Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Story Not found" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Story Not found" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -562,7 +562,7 @@ router.post("/getSuccessStory" , async function(req,res,next){
 //             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Event Added" });
 //             await record.save();
 //         }else{
-//             res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
+//             res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
 //         }
 //     } catch (error) {
 //         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -596,7 +596,7 @@ router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Event Added" });
             await record.save();
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Event Not Added" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -610,7 +610,7 @@ router.post("/getEvents" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Events Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "Events Not found" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Events Not found" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -624,7 +624,7 @@ router.post("/getAllBookMarkNews" , async function(req,res,next){
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
         }else{
-            res.status(400).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
