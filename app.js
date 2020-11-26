@@ -56,9 +56,10 @@ app.use(function(req, res, next) {
 mongoose.connect('mongodb+srv://root:root@cluster0.s73xs.mongodb.net/test',{
   useNewUrlParser : true,
   useUnifiedTopology : true,
-  useFindAndModify: false 
+  useFindAndModify: false,
+  useCreateIndex: true, 
 });
-
+// mongoose.set('useCreateIndex', true);
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development

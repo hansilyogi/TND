@@ -28,7 +28,10 @@ var newSchema = mongoose.Schema({
     experience : { type:String },
     about_business : { type:String },
     achievement : { type:String },
-    status : { type:String }
+    status : { type:String },
+    fcmToken : { 
+        type: String,
+    }
 });
 
 module.exports = mongoose.model("UsersList",newSchema);
