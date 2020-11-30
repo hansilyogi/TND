@@ -6,6 +6,7 @@ var model = require('../model/test.model');
 router.post('/',async function(req,res,next){
     
     const mobile = req.body.mobile;
+    // const fcmToken = req.body.fcmToken;
 
     try {
         var record = await model.find({ mobile: mobile});

@@ -38,7 +38,8 @@ router.post('/', async function(req, res, next) {
       email : req.body.email,
       company_name : req.body.company_name,
       referred_by : req.body.referred_by,
-      fcmToken: req.body.fcmToken,  
+      fcmToken: req.body.fcmToken,
+      isVerified: req.body.isVerified,  
     });
     console.log(record);
     record.save();
@@ -75,7 +76,7 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       business_category: business_category,
       experience: experience,
       about_business: about_business,
-      fcmToken: fcmToken,
+      // fcmToken: fcmToken,
     }
     var record = await model.findByIdAndUpdate( id , update );
     res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Updated" });  

@@ -31,6 +31,10 @@ var newSchema = mongoose.Schema({
     status : { type:String },
     fcmToken : { 
         type: String,
+    },
+    isVerified : {
+        type: Boolean,
+        default: false,
     }
 });
 
