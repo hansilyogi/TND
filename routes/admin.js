@@ -278,7 +278,10 @@ router.post("/getAllNews" , async function(req,res,next){
 router.post("/getFeaturedNews" , async function(req,res,next){
     const { newsId } = req.body;
     try {
-        var record = await newsModelSchema.find({ trending: true });
+        var record = await newsModelSchema.find({ trending: true })
+                                          .populate({
+                                              path: "newsType",
+                                          });
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{

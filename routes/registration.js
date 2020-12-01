@@ -55,10 +55,6 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
           faceBook , instagram , linkedIn , twitter , whatsApp , youTube
         } = req.body;
   const file = req.file;
-  var dob = moment(req.body.date_of_birth);
-  var spouse_dob = moment(req.body.spouse_birth_date);
-  dob = dob.utc().format('YYYY-MM-DD');
-  spouse_dob = spouse_dob.utc().format('YYYY-MM-DD');
   try {
     var update = {
       name : name,
@@ -66,11 +62,11 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       email : email,
       company_name : company_name,
       referred_by : referred_by,
-      date_of_birth: dob,
+      date_of_birth: date_of_birth,
       gender: gender,
       address: address,
       spouse_name: spouse_name,
-      spouse_birth_date: spouse_birth_date == "" ? " " : spouse_dob,
+      spouse_birth_date: spouse_birth_date,
       achievement: achievement,
       number_of_child: number_of_child,
       img: file == undefined ? " " : file.path,
@@ -78,12 +74,12 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       business_category: business_category,
       experience: experience,
       about_business: about_business,
-      faceBook: faceBook,
-      instagram: instagram,
-      linkedIn: linkedIn,
-      twitter: twitter,
-      whatsApp: whatsApp,
-      youTube: youTube
+      faceBook: faceBook == null ? faceBook : "https://www.facebook.com/",
+      instagram: instagram == null ? instagram : "https://www.instagram.com/",
+      linkedIn: linkedIn == null ? linkedIn : "https://www.linkedin.com/",
+      twitter: twitter == null ? twitter : "https://twitter.com/",
+      whatsApp: whatsApp == null ? whatsApp : "https://www.whatsapp.com/",
+      youTube: youTube == null ? youTube : "https://www.youtube.com/",
     }
     var record = await model.findByIdAndUpdate( id , update );
     res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Updated" });  
