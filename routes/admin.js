@@ -646,7 +646,7 @@ router.post("/getSuccessStory" , async function(req,res,next){
 // });
 
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
-    const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
+    const { eventName , eventImage , eventOrganiseBy , startDate , endDate , description,
              startTime, endTime , faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
 
     const file = req.file;
@@ -666,6 +666,7 @@ router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,
             startTime: startTime,
             endDate: endDate,
             endTime: endTime,
+            description: description,
             faceBook: faceBook,
             instagram: instagram,
             linkedIn: linkedIn,

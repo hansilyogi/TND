@@ -74,12 +74,12 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       business_category: business_category,
       experience: experience,
       about_business: about_business,
-      faceBook: faceBook == null ? faceBook : "https://www.facebook.com/",
-      instagram: instagram == null ? instagram : "https://www.instagram.com/",
-      linkedIn: linkedIn == null ? linkedIn : "https://www.linkedin.com/",
-      twitter: twitter == null ? twitter : "https://twitter.com/",
-      whatsApp: whatsApp == null ? whatsApp : "https://www.whatsapp.com/",
-      youTube: youTube == null ? youTube : "https://www.youtube.com/",
+      faceBook: faceBook,
+      instagram: instagram,
+      linkedIn: linkedIn,
+      twitter: twitter,
+      whatsApp: whatsApp,
+      youTube: youTube,
     }
     var record = await model.findByIdAndUpdate( id , update );
     res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Updated" });  

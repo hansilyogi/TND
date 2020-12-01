@@ -23,6 +23,9 @@ var eventSchema = mongoose.Schema({
     endTime: {
         type: String,
     },
+    description: {
+        type: String
+    },
     faceBook : {
         type: String,
         default : "https://www.facebook.com/"
