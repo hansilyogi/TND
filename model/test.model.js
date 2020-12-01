@@ -2,40 +2,108 @@ var mongoose = require('mongoose');
 Schema = mongoose.Schema;
 
 var newSchema = mongoose.Schema({
-    name: { type: String },
-    email: { type: String },
+    name: { 
+        type: String,
+        require: true,
+    },
+    email: { 
+        type: String,
+        require: true,
+    },
     mobile: { 
         type: String,
-        unique: true, 
+        unique: true,
+        require: true, 
     },
-    company_name: { type: String },
-    referred_by: { type: String },
-    date_of_birth : { type: String },
-    gender : { type: String },
-    address : { type: String },
-    spouse_name : { type: String },
-    spouse_birth_date : { type: String },
-    number_of_child : { type: Number },
+    company_name: { 
+        type: String,
+        default: "",
+    },
+    referred_by: { 
+        type: String,
+        default: "", 
+    },
+    date_of_birth : { 
+        type: String,
+        default: "",
+    },
+    gender : { 
+        type: String,
+        default: "", 
+    },
+    address : { 
+        type: String,
+        default: "", 
+    },
+    spouse_name : { 
+        type: String,
+        default: "", 
+    },
+    spouse_birth_date : { 
+        type: String,
+        default: "",
+    },
+    number_of_child : { 
+        type: Number,
+        default: 0, 
+    },
     img : { 
         type: String,
-        default: "uploads/users/default-profile.jpg", 
+        default: "uploads/users/default-profile.png", 
     },
     keyword : [{ type: String }],
     business_category : { 
         type: mongoose.Types.ObjectId,
-        ref: "BusinessCategory"
+        ref: "BusinessCategory",
     },
-    experience : { type:String },
-    about_business : { type:String },
-    achievement : { type:String },
-    status : { type:String },
+    experience : { 
+        type:String,
+        default: ""
+    },
+    about_business : { 
+        type:String,
+        default: ""
+    },
+    achievement : { 
+        type:String,
+        default: ""
+    },
+    status : { 
+        type: Boolean,
+        // default: true
+    },
     fcmToken : { 
         type: String,
+        default: ""
     },
     isVerified : {
         type: Boolean,
         default: false,
-    }
+    },
+    faceBook : {
+        type: String,
+        default : "https://www.facebook.com/"
+    },
+    instagram : {
+        type: String,
+        default : "https://www.instagram.com/"
+    },
+    linkedIn : {
+        type: String,
+        default: "https://www.linkedin.com/"
+    },
+    twitter : {
+        type: String,
+        default: "https://twitter.com/"
+    },
+    whatsApp : {
+        type: String,
+        default: "https://www.whatsapp.com/"
+    },
+    youTube : {
+        type: String,
+        default: "https://www.youtube.com/"
+    },
 });
 
 module.exports = mongoose.model("UsersList",newSchema);

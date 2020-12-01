@@ -6,8 +6,10 @@ var newsModelSchema = mongoose.Schema({
     },
     content: {type:String},
     newsDate: {
-        type:Date,
-        default: Date.now
+        type:String,
+    },
+    newsTime: {
+        type: String,
     },
     headline: {
         type:String,

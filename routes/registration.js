@@ -49,8 +49,10 @@ router.post('/', async function(req, res, next) {
 
 //add personal Information
 router.post("/updatePersonal" , uploadUserProfile.single("img") , async function(req,res,next){
-  const { id , name , email , mobile , company_name , referred_by , date_of_birth , gender, address , spouse_name , spouse_birth_date , achievement ,
-          number_of_child , img , keyword, business_category, experience, about_business, fcmToken,
+  const { id , name , email , mobile , company_name , referred_by , date_of_birth , gender, 
+          address , spouse_name , spouse_birth_date , achievement ,
+          number_of_child , img , keyword, business_category, experience, about_business, 
+          faceBook , instagram , linkedIn , twitter , whatsApp , youTube
         } = req.body;
   const file = req.file;
   var dob = moment(req.body.date_of_birth);
@@ -68,7 +70,7 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       gender: gender,
       address: address,
       spouse_name: spouse_name,
-      spouse_birth_date: spouse_dob,
+      spouse_birth_date: spouse_birth_date == "" ? " " : spouse_dob,
       achievement: achievement,
       number_of_child: number_of_child,
       img: file == undefined ? " " : file.path,
@@ -76,46 +78,50 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       business_category: business_category,
       experience: experience,
       about_business: about_business,
-      // fcmToken: fcmToken,
+      faceBook: faceBook,
+      instagram: instagram,
+      linkedIn: linkedIn,
+      twitter: twitter,
+      whatsApp: whatsApp,
+      youTube: youTube
     }
     var record = await model.findByIdAndUpdate( id , update );
     res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Updated" });  
   } catch (error) {
     res.status(500).json({ IsSuccess: false , Message: error.message });
   }
-  
 });
 
-router.post("/sendotp", async function(req, res, next) {
-  const { mobile, code, appSignature } = req.body;
-  try {
-      let message = "Your verification code is " + code + " " + appSignature;
-      let msgportal =
-          "http://promosms.itfuturz.com/vendorsms/pushsms.aspx?user=" +
-          process.env.SMS_USER +
-          "&password=" +
-          process.env.SMS_PASS +
-          "&msisdn=" +
-          mobile +
-          "&sid=" +
-          process.env.SMS_SID +
-          "&msg=" +
-          message +
-          "&fl=0&gwid=2";
-      let getresponse = await axios.get(msgportal);
-      if (getresponse.data.ErrorMessage == "Success") {
-          res
-              .status(200)
-              .json({ Message: "Message Sent!", Data: 1, IsSuccess: true });
-      } else {
-          res
-              .status(200)
-              .json({ Message: "Message Not Sent!", Data: 0, IsSuccess: true });
-      }
-  } catch (err) {
-      res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
-  }
-});
+// router.post("/sendotp", async function(req, res, next) {
+//   const { mobile, code, appSignature } = req.body;
+//   try {
+//       let message = "Your verification code is " + code + " " + appSignature;
+//       let msgportal =
+//           "http://promosms.itfuturz.com/vendorsms/pushsms.aspx?user=" +
+//           process.env.SMS_USER +
+//           "&password=" +
+//           process.env.SMS_PASS +
+//           "&msisdn=" +
+//           mobile +
+//           "&sid=" +
+//           process.env.SMS_SID +
+//           "&msg=" +
+//           message +
+//           "&fl=0&gwid=2";
+//       let getresponse = await axios.get(msgportal);
+//       if (getresponse.data.ErrorMessage == "Success") {
+//           res
+//               .status(200)
+//               .json({ Message: "Message Sent!", Data: 1, IsSuccess: true });
+//       } else {
+//           res
+//               .status(200)
+//               .json({ Message: "Message Not Sent!", Data: 0, IsSuccess: true });
+//       }
+//   } catch (err) {
+//       res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+//   }
+// });
 
 router.post("/verify", async function(req, res, next) {
   const { mobile, fcmToken } = req.body;

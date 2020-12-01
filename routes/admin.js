@@ -4,7 +4,8 @@ var router = express.Router();
 var multer = require('multer');
 var fs = require('fs');
 const path = require('path');
-var moment = require('moment');
+// var moment = require('moment');
+const moment = require('moment-timezone');
 const mongoose = require("mongoose");
 
 var newsCategorySchema = require('../model/newsCategory.js');
@@ -17,6 +18,7 @@ const bannerModel = require('../model/bannerModel');
 var directoryData = require('../model/test.model');
 var businessCategorySchema = require('../model/businessCategoryModel');
 const { off } = require('../app.js');
+const { time } = require('console');
 
 var newCategoryImage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -157,17 +159,39 @@ router.post("/getNewsCategory" , async function(req,res,next){
     }
 });
 
+function getCurrentDate(){
+    var date = moment()
+      .tz("Asia/Calcutta")
+      .format("DD MM YYYY, h:mm:ss a")
+      .split(",")[0];
+    date = date.split(" ");
+    date = date[0] + "/" + date[1] + "/" + date[2];
+
+    return date;
+}
+
+function getCurrentTime(){
+    var time = moment()
+      .tz("Asia/Calcutta")
+      .format("DD MM YYYY, h:mm:ss a")
+      .split(",")[1];
+
+    return time;
+}
+
 router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,res,next){
-    const { newsType , content , newsDate , headline , newsImage , trending , bookmark} = req.body;
+    const { newsType , content , newsDate, newsTime , headline , newsImage , trending , bookmark} = req.body;
     const file = req.file;
     //console.log(imageData);
+    
     try {
         var newsData;
         if(req.file){
             newsData = await new newsModelSchema({
                 newsType : newsType,
                 content : content,
-                //newsDate : newsDate,
+                newsDate : getCurrentDate(),
+                newsTime : getCurrentTime(),
                 headline : headline,
                 newsImage : file.path,
                 trending : trending,
@@ -177,8 +201,9 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
             newsData = await new newsModelSchema({
                 newsType : newsType,
                 content : content,
-                //newsDate : newsDate,
-                headline : headline,trending : trending,
+                newsDate : getCurrentDate(),
+                newsTime : getCurrentTime(),
+                headline : headline,
                 bookmark : bookmark,
                 trending : trending,
                 bookmark : bookmark,
@@ -197,19 +222,21 @@ router.post('/updatenews', async function(req , res, next){
     console.log(req.body);
     const id = req.body.id;
     //const file = req.file;
-    const { newsType , content , headline } = req.body;
+    const { newsType , content , headline , trending } = req.body;
     try {
         if(req.file){
             var updateNewsData = {
-                newsType : newsType,
+                newsType : mongoose.Types.ObjectId(newsType),
                 content : content,
                 headline : headline,
+                trending : trending,
             };
         }else{
             updateNewsData = {
-                newsType : newsType,
+                newsType : mongoose.Types.ObjectId(newsType),
                 content : content,
-                headline : headline
+                headline : headline,
+                trending : trending,
             };
         }
         console.log(updateNewsData);
@@ -221,9 +248,10 @@ router.post('/updatenews', async function(req , res, next){
 });
 
 router.post('/deletenews', async function(req,res,next){
-    const id = req.body.id;
+    const {id} = req.body;
+    console.log(req.body);
     try {
-        let deleteNews = await newsModelSchema.findByIdAndDelete(id);
+        let deleteNews = await newsModelSchema.findOneAndDelete({ _id : id });
         if(deleteNews != null){
             res.status(200).json({ IsSuccess : true , Data: 1 , Message : "Data Deleted...!!!" });
         }else{
@@ -237,6 +265,20 @@ router.post('/deletenews', async function(req,res,next){
 router.post("/getAllNews" , async function(req,res,next){
     try {
         var record = await newsModelSchema.find().populate("newsType");
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No News Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/getFeaturedNews" , async function(req,res,next){
+    const { newsId } = req.body;
+    try {
+        var record = await newsModelSchema.find({ trending: true });
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "News Found" });
         }else{
@@ -267,6 +309,7 @@ router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImag
     }
 });
 
+//Get All Business Category
 router.post("/businessCategory" , async function(req , res ,next){
     try {
         var record = await businessCategorySchema.find();
