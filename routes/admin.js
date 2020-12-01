@@ -413,7 +413,8 @@ router.post("/getAllBanner" , async function(req,res,next){
 });
 
 router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(req,res,next){
-    const { title , bannerImage , businessCategory , dateTime , type , details ,redeemBy , offerExpire } = req.body;
+    const { title , bannerImage , businessCategory , dateTime , type , details ,redeemBy , 
+        offerExpire ,faceBook , instagram , linkedIn , twitter , whatsApp , youTube  } = req.body;
     var expire = moment(offerExpire);
     expire = expire.utc().format('MM/DD/YYYY');
     var expireBody = moment(offerExpire);
@@ -435,7 +436,7 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
         const file = req.file;
         var record = await new offerSchema({
             title: title,
-            type: type,
+            // type: type,
             details: details,
             redeemBy: redeemBy,
             bannerImage: file == undefined ? null : file.path,
@@ -443,6 +444,12 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             offerExpire: expireBody,
             businessCategory: businessCategory,
             daysRemain: daysRemaining,
+            faceBook: faceBook,
+            instagram: instagram,
+            linkedIn: linkedIn,
+            twitter: twitter,
+            whatsApp: whatsApp,
+            youTube: youTube,
         });
         await record.save();
         if(record){
