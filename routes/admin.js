@@ -571,7 +571,7 @@ router.post("/getOffer" , async function(req,res,next){
 });
 
 router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async function(req,res,next){
-    const { headline , storyImage , storyContent , favorite , date,
+    const { headline , storyImage , storyContent , favorite , date, time,
         faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
     const file = req.file;
     try {
@@ -580,7 +580,8 @@ router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async
             storyImage: file == undefined ? " " : file.path,
             storyContent: storyContent,
             favorite: favorite,
-            date: date,
+            date: getCurrentDate(),
+            time: getCurrentTime(),
             faceBook: faceBook,
             instagram: instagram,
             linkedIn: linkedIn,

@@ -16,8 +16,11 @@ var successStorySchema = mongoose.Schema({
         default: false
     },
     date: {
-        type: Date,
-        default: Date.now()
+        type: String,
+        // default: Date.now()
+    },
+    time: {
+        type: String
     },
     faceBook : {
         type: String,
