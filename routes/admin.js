@@ -292,6 +292,22 @@ router.post("/getFeaturedNews" , async function(req,res,next){
     }
 });
 
+router.post("/updateToFeatured" , async function(req,res){
+    const { newsId } = req.body;
+    try {
+        var record = await newsModelSchema.findByIdAndUpdate(newsId,{ trending: true },function(err,data){
+            if(err){
+                res.status(200).json({ IsSuccess: true , Message: err })
+            }else{
+                res.status(200).json({ IsSuccess: true , Message: "News is Featured" });
+            }
+        });
+        
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImage") , async function(req,res,next){
     const { categoryName , categoryImage , dateTime } = req.body;
     const file = req.file;
