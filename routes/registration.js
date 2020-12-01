@@ -82,7 +82,7 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       youTube: youTube,
     }
     var record = await model.findByIdAndUpdate( id , update );
-    res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Data Updated" });  
+    res.status(200).json({ IsSuccess: true , Data: 1 , Message: "Data Updated" });  
   } catch (error) {
     res.status(500).json({ IsSuccess: false , Message: error.message });
   }
