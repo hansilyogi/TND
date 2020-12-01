@@ -564,7 +564,8 @@ router.post("/getOffer" , async function(req,res,next){
 });
 
 router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async function(req,res,next){
-    const { headline , storyImage , storyContent , favorite , date } = req.body; 
+    const { headline , storyImage , storyContent , favorite , date,
+        faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
     const file = req.file;
     try {
         var record = await new successStorySchema({
@@ -573,6 +574,12 @@ router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async
             storyContent: storyContent,
             favorite: favorite,
             date: date,
+            faceBook: faceBook,
+            instagram: instagram,
+            linkedIn: linkedIn,
+            twitter: twitter,
+            whatsApp: whatsApp,
+            youTube: youTube,
         });
         if(record){
             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "Success Story Added" });
@@ -633,7 +640,7 @@ router.post("/getSuccessStory" , async function(req,res,next){
 
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
     const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
-             startTime, endTime } = req.body; 
+             startTime, endTime , faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
 
     const file = req.file;
     // var initialDateTime = moment(startDate);
@@ -652,6 +659,12 @@ router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,
             startTime: startTime,
             endDate: endDate,
             endTime: endTime,
+            faceBook: faceBook,
+            instagram: instagram,
+            linkedIn: linkedIn,
+            twitter: twitter,
+            whatsApp: whatsApp,
+            youTube: youTube,
         });
         //console.log(record);
         if(record){
