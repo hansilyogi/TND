@@ -247,7 +247,7 @@ router.post('/updatenews', async function(req , res, next){
     }
 });
 
-router.post('/deletenews', async function(req,res,next){
+router.post('/deletenews', uploadCategoryImg.single() , async function(req,res,next){
     const {id} = req.body;
     console.log(req.body);
     try {
@@ -292,8 +292,9 @@ router.post("/getFeaturedNews" , async function(req,res,next){
     }
 });
 
-router.post("/updateToFeatured" , async function(req,res){
+router.post("/updateToFeatured" , uploadCategoryImg.single() ,async function(req,res,next){
     const { newsId } = req.body;
+    console.log(req.body);
     try {
         var record = await newsModelSchema.findByIdAndUpdate(newsId,{ trending: true },function(err,data){
             if(err){
@@ -302,7 +303,6 @@ router.post("/updateToFeatured" , async function(req,res){
                 res.status(200).json({ IsSuccess: true , Message: "News is Featured" });
             }
         });
-        
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
     }
