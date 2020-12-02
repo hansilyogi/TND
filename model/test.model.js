@@ -51,7 +51,10 @@ var newSchema = mongoose.Schema({
         type: String,
         default: "uploads/users/default-profile.png", 
     },
-    keyword : [{ type: String }],
+    memberOf : { 
+        type: mongoose.Types.ObjectId,
+        ref: "MemberShip", 
+    },
     business_category : { 
         type: mongoose.Types.ObjectId,
         ref: "BusinessCategory",

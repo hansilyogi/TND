@@ -18,6 +18,7 @@ const bannerModel = require('../model/bannerModel');
 var directoryData = require('../model/test.model');
 var businessCategorySchema = require('../model/businessCategoryModel');
 var bookMarkSchema = require("../model/userBookMarkNews");
+var memberModelSchema = require("../model/memberModel");
 const { off } = require('../app.js');
 const { time } = require('console');
 
@@ -105,6 +106,18 @@ var businessCategorylocation = multer.diskStorage({
     },
 });
 
+var memberShiplocation = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, "uploads/memberShip");
+    },
+    filename: function (req, file, cb) {
+        cb(
+            null,
+            file.fieldname + "_" + Date.now() + path.extname(file.originalname)
+        );
+    },
+});
+
 var uploadCategoryImg = multer({ storage: newCategoryImage });
 var uploadNewsImg = multer({ storage: newsImage });
 var uploadbanner = multer({ storage: bannerlocation });
@@ -112,6 +125,7 @@ var uploadOfferbanner = multer({ storage: offerBannerlocation });
 var uploadSuccessStory = multer({ storage: successStorylocation });
 var uploadEvent = multer({ storage: eventlocation });
 var uploadBusinessCategory = multer({ storage: businessCategorylocation });
+var uploadMemberShip = multer({ storage: memberShiplocation });
 
 router.post('/adminlogin',async function(req,res,next){
     const { username , password } = req.body;
@@ -738,6 +752,38 @@ router.post("/getAllBookMarkNews" , async function(req,res,next){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
         }else{
             res.status(200).json({ IsSuccess: true , Data: 0 , Message: "No Bookmark News Available" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/addMemberShip", uploadMemberShip.single("logo") , async function(req,res,next){
+    const { memberShipName } = req.body;
+    const file = req.file;
+    try {
+        var record = await new memberModelSchema({
+            memberShipName: memberShipName,
+            logo: file == undefined ? null : file.path, 
+        });
+        if(record){
+            record.save();
+            res.status(200).json({ IsSuccess: true , Data: [record] , Message: "MemberShip Added" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Not Added" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/getAllMemberCategory" ,async function(req,res,next){
+    try {
+        var record = await memberModelSchema.find();
+        if(record){
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "MemberShips Founds" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Not Found" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });

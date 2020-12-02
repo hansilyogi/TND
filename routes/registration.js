@@ -51,7 +51,7 @@ router.post('/', async function(req, res, next) {
 router.post("/updatePersonal" , uploadUserProfile.single("img") , async function(req,res,next){
   const { id , name , email , mobile , company_name , referred_by , date_of_birth , gender, 
           address , spouse_name , spouse_birth_date , achievement ,
-          number_of_child , img , keyword, business_category, experience, about_business, 
+          number_of_child , img , memberOf, business_category, experience, about_business, 
           faceBook , instagram , linkedIn , twitter , whatsApp , youTube
         } = req.body;
   const file = req.file;
@@ -70,7 +70,7 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       achievement: achievement,
       number_of_child: number_of_child,
       img: file == undefined ? " " : file.path,
-      keyword: keyword,
+      memberOf: memberOf,
       business_category: business_category,
       experience: experience,
       about_business: about_business,
