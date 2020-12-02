@@ -9,7 +9,13 @@ router.post('/',async function(req,res,next){
     // const fcmToken = req.body.fcmToken;
 
     try {
-        var record = await model.find({ mobile: mobile});
+        var record = await model.find({ mobile: mobile})
+                                .populate({
+                                    path: "business_category",
+                                })
+                                .populate({
+                                    path: "memberOf",
+                                });
         if(record.length == 1){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "User LoggedIn" });
         }else{
