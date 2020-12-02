@@ -17,6 +17,7 @@ var eventSchema = require('../model/eventModel');
 const bannerModel = require('../model/bannerModel');
 var directoryData = require('../model/test.model');
 var businessCategorySchema = require('../model/businessCategoryModel');
+var bookMarkSchema = require("../model/userBookMarkNews");
 const { off } = require('../app.js');
 const { time } = require('console');
 
@@ -701,9 +702,37 @@ router.post("/getEvents" , async function(req,res,next){
     }
 });
 
-router.post("/getAllBookMarkNews" , async function(req,res,next){
+router.post("/addToBookMark", async function(req,res,next){
+    const { userId , newsId } = req.body;
     try {
-        var record = await newsModelSchema.find({ bookmark: true }).populate("newsType");
+        var record = await new bookMarkSchema({
+            userId: userId,
+            newsId: newsId,
+            date: getCurrentDate(),
+            time: getCurrentTime(),
+        });
+        if(record){
+            record.save();
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Added To BookMark" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Something Wrong" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/getAllBookMarkNews" , async function(req,res,next){
+    const { userId } = req.body;
+    try {
+        var record = await bookMarkSchema.find({ userId: userId })
+                                         .populate({
+                                             path: "userId",
+                                             select: "name mobile email company_name business_category"
+                                         })
+                                         .populate({
+                                            path: "newsId",
+                                        });
         // console.log(record);
         if(record){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Bookmark News Found" });
