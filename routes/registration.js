@@ -55,6 +55,33 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
           faceBook , instagram , linkedIn , twitter , whatsApp , youTube
         } = req.body;
   const file = req.file;
+  if(req.file){
+    const cloudinary = require('cloudinary').v2;
+    cloudinary.config({
+      cloud_name: 'dckj2yfap',
+      api_key: '693332219167892',
+      api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+    });
+    var path = req.file.path;
+    var uniqueFilename = new Date().toISOString();
+    // console.log(path);
+    // console.log(uniqueFilename);
+    // console.log(req.body);
+    cloudinary.uploader.upload(
+      path,
+      { public_id: `blog/users/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+      function(err, image) {
+        if (err) return res.send(err)
+        // console.log('file uploaded to Cloudinary');
+        // remove file from server
+        const fs = require('fs');
+        fs.unlinkSync(path);
+        // return image details
+        // var image_data = json(image);
+        // console.log(image_data);
+      }
+    )
+  }
   try {
     var update = {
       name : name,
@@ -69,7 +96,7 @@ router.post("/updatePersonal" , uploadUserProfile.single("img") , async function
       spouse_birth_date: spouse_birth_date,
       achievement: achievement,
       number_of_child: number_of_child,
-      img: file == undefined ? " " : file.path,
+      img: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/users/'+uniqueFilename,
       memberOf: memberOf,
       business_category: business_category,
       experience: experience,

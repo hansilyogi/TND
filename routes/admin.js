@@ -144,11 +144,35 @@ router.post('/adminlogin',async function(req,res,next){
 router.post("/addNewsCategory" , uploadCategoryImg.single("categoryImage") , async function(req,res,next){
     const { newsType , newsDate , categoryImage } = req.body;
     const file = req.file;
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+        
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/newsCategoryPic/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+            
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     try {
         var record = await new newsCategorySchema({
             newsType: newsType,
             newsDate: newsDate,
-            categoryImage: file == undefined ? null : file.path,
+            // categoryImage: file == undefined ? null : file.path,
+            categoryImage: file == undefined ? null : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/newsCategoryPic/'+uniqueFilename,
         });
         if(record){
             res.status(200).json({ IsSuccess: true , Data: [record] , Message: "News Category Added" });
@@ -198,6 +222,30 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
     const { newsType , content , newsDate, newsTime , headline , newsImage , trending , bookmark} = req.body;
     const file = req.file;
     //console.log(imageData);
+
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+        
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/newsPictures/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+            
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     
     try {
         var newsData;
@@ -208,7 +256,7 @@ router.post('/addnews', uploadNewsImg.single('newsImage'), async function(req,re
                 newsDate : getCurrentDate(),
                 newsTime : getCurrentTime(),
                 headline : headline,
-                newsImage : file.path,
+                newsImage : file == undefined ? null : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/newsPictures/'+uniqueFilename,
                 trending : trending,
                 bookmark : bookmark,
             });
@@ -309,7 +357,7 @@ router.post("/getFeaturedNews" , async function(req,res,next){
 
 router.post("/updateToFeatured" , uploadCategoryImg.single() ,async function(req,res,next){
     const { newsId } = req.body;
-    console.log(req.body);
+    
     try {
         var record = await newsModelSchema.findByIdAndUpdate(newsId,{ trending: true },function(err,data){
             if(err){
@@ -326,10 +374,33 @@ router.post("/updateToFeatured" , uploadCategoryImg.single() ,async function(req
 router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImage") , async function(req,res,next){
     const { categoryName , categoryImage , dateTime } = req.body;
     const file = req.file;
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/businessCategory/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     try {
         var record = await new businessCategorySchema({
             categoryName: categoryName,
-            categoryImage: file == undefined ? "" : file.path,
+            categoryImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/businessCategory/'+uniqueFilename,
             dateTime: dateTime
         });
         if(record){
@@ -393,13 +464,37 @@ router.post("/getNewsOfCategory" , async function(req,res,next){
 
 router.post("/addBanner" , uploadbanner.single("image"), async function(req,res,next){
     const { title, type } = req.body;
+
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/banner/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     
     try {
         const file = req.file;
         let newbanner = new bannerSchema({
             title: title,
             type: type,
-            image: file == undefined ? null : file.path,
+            image: file == undefined ? null : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/banner/'+uniqueFilename,
         });
         await newbanner.save();
         res
@@ -447,6 +542,30 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
     var daysRemaining = Math.abs( date1.getDate() - date2.getDate() );
     // console.log(daysRemaining);
 
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/offer/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
+
     try {
         const file = req.file;
         var record = await new offerSchema({
@@ -454,7 +573,7 @@ router.post("/offer" , uploadOfferbanner.single("bannerImage") , async function(
             // type: type,
             details: details,
             redeemBy: redeemBy,
-            bannerImage: file == undefined ? null : file.path,
+            bannerImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/offer/'+uniqueFilename,
             dateTime: bodyInitialDate,
             offerExpire: expireBody,
             businessCategory: businessCategory,
@@ -589,10 +708,33 @@ router.post("/addSuccessStory" , uploadSuccessStory.single("storyImage") , async
     const { headline , storyImage , storyContent , favorite , date, time,
         faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
     const file = req.file;
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/successStory/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     try {
         var record = await new successStorySchema({
             headline: headline,
-            storyImage: file == undefined ? " " : file.path,
+            storyImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/successStory/'+uniqueFilename,
             storyContent: storyContent,
             favorite: favorite,
             date: getCurrentDate(),
@@ -666,6 +808,30 @@ router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,
              startTime, endTime , faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
 
     const file = req.file;
+
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/events/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
     // var initialDateTime = moment(startDate);
     // var endDateTime = moment(endDate);
     // var initialDate = initialDateTime.utc().format('DD/MM/YYYY');
@@ -676,7 +842,7 @@ router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,
     try {
         var record = await new eventSchema({
             eventName: eventName,
-            eventImage: file == undefined ? null : file.path,
+            eventImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/events/'+uniqueFilename,
             eventOrganiseBy: eventOrganiseBy,
             startDate: startDate,
             startTime: startTime,
@@ -761,10 +927,35 @@ router.post("/getAllBookMarkNews" , async function(req,res,next){
 router.post("/addMemberShip", uploadMemberShip.single("logo") , async function(req,res,next){
     const { memberShipName } = req.body;
     const file = req.file;
+
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/memberShip/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
+
     try {
         var record = await new memberModelSchema({
             memberShipName: memberShipName,
-            logo: file == undefined ? null : file.path, 
+            logo: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/memberShip/'+uniqueFilename, 
         });
         if(record){
             record.save();
