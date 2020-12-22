@@ -414,6 +414,50 @@ router.post("/addBusinessCategory" , uploadBusinessCategory.single("categoryImag
     }
 });
 
+router.post("/updateBusinessCategory" , uploadBusinessCategory.single("categoryImage") , async function(req,res,next){
+    const { categoryName , categoryId , dateTime } = req.body;
+    const file = req.file;
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/businessCategory/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
+    try {
+        let updateIs = {
+            categoryName: categoryName,
+            categoryImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/businessCategory/'+uniqueFilename,
+            dateTime: dateTime,
+        }
+        let record = await businessCategorySchema.find({ _id: categoryId });
+        if(record.length == 1){
+            let updateData = await businessCategorySchema.findByIdAndUpdate(categoryId,updateIs);
+            res.status(200).json({ IsSuccess: true , Data: record , Message: "Business Category Updated" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Not Updated" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 //Get All Business Category
 router.post("/businessCategory" , async function(req , res ,next){
     try {
@@ -771,6 +815,57 @@ router.post("/getSuccessStory" , async function(req,res,next){
     }
 });
 
+router.post("/updateSuccessStory", uploadSuccessStory.single("storyImage") ,async function(req,res,next){
+    const { headline , storyId , storyContent , favorite , date, time,
+        faceBook , instagram , linkedIn , twitter , whatsApp , youTube } = req.body; 
+    const file = req.file;
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/successStory/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
+      try {
+          var updateIs = {
+            headline: headline,
+            storyImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/successStory/'+uniqueFilename,
+            storyContent: storyContent,
+            favorite: favorite,
+            date: getCurrentDate(),
+            time: getCurrentTime(),
+            faceBook: faceBook,
+            instagram: instagram,
+            linkedIn: linkedIn,
+            twitter: twitter,
+            whatsApp: whatsApp,
+            youTube: youTube,
+          }
+          var record = await successStorySchema.find({ _id: storyId });
+          if(record.length == 1){
+              let updateData = await successStorySchema.findByIdAndUpdate(storyId,updateIs);
+              res.status(200).json({ IsSuccess: true , Data: 1 , Message: "SuccessStory Updated" });
+          }
+      } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+      }
+});
 // router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
 //     const { eventName , eventImage , eventOrganiseBy , startDate , endDate ,
 //             startFromTime , startToTime, endFromTime , endToTime } = req.body; 
@@ -802,6 +897,31 @@ router.post("/getSuccessStory" , async function(req,res,next){
 //         res.status(500).json({ IsSuccess: false , Message: error.message });
 //     }
 // });
+
+function cloudImage(folderName){
+    const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/${folderName}/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+    // return uniqueFilename;
+}
 
 router.post("/addEvent" , uploadEvent.single("eventImage") , async function(req,res,next){
     const { eventName , eventImage , eventOrganiseBy , startDate , endDate , description,
@@ -876,6 +996,65 @@ router.post("/getEvents" , async function(req,res,next){
             res.status(200).json({ IsSuccess: true , Data: record , Message: "Events Found" });
         }else{
             res.status(200).json({ IsSuccess: true , Data: 0 , Message: "Events Not found" });
+        }
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+router.post("/updateEvent", uploadEvent.single("eventImage") , async function(req,res,next){
+    const { eventId , eventName , eventOrganiseBy , startDate , endDate , description,
+        startTime, endTime , faceBook , instagram , linkedIn , twitter , whatsApp , 
+        youTube } = req.body;
+    
+    const file = req.file;
+
+    try {
+        if(req.file){
+            const cloudinary = require('cloudinary').v2;
+            cloudinary.config({
+              cloud_name: 'dckj2yfap',
+              api_key: '693332219167892',
+              api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+            });
+            var path = req.file.path;
+            var uniqueFilename = new Date().toISOString();
+           
+            cloudinary.uploader.upload(
+              path,
+              { public_id: `blog/events/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+              function(err, image) {
+                if (err) return res.send(err)
+              
+                // remove file from server
+                const fs = require('fs');
+                fs.unlinkSync(path);
+                
+              }
+            )
+        }
+        var updateIs = {
+            eventName: eventName,
+            eventImage: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/events/'+uniqueFilename,
+            eventOrganiseBy: eventOrganiseBy,
+            startDate: startDate,
+            startTime: startTime,
+            endDate: endDate,
+            endTime: endTime,
+            description: description,
+            faceBook: faceBook,
+            instagram: instagram,
+            linkedIn: linkedIn,
+            twitter: twitter,
+            whatsApp: whatsApp,
+            youTube: youTube,
+        }
+        var record = await eventSchema.find({ _id: eventId });
+        console.log(record);
+        console.log(record.length);
+        if(record.length == 1){
+            let updateEvent = await eventSchema.findByIdAndUpdate(eventId,updateIs);
+            res.status(200).json({ IsSuccess: true , Data: 1 , Message: "Event Updated" });
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
@@ -968,6 +1147,51 @@ router.post("/addMemberShip", uploadMemberShip.single("logo") , async function(r
     }
 });
 
+router.post("/updateMemberShip", uploadMemberShip.single("logo") , async function(req,res,next){
+    const { memberShipId , memberShipName } = req.body;
+    const file = req.file;
+
+    if(req.file){
+        const cloudinary = require('cloudinary').v2;
+        cloudinary.config({
+          cloud_name: 'dckj2yfap',
+          api_key: '693332219167892',
+          api_secret: 'acUf4mqnUBJCwsovIz-Ws894NGY'
+        });
+        var path = req.file.path;
+        var uniqueFilename = new Date().toISOString();
+       
+        cloudinary.uploader.upload(
+          path,
+          { public_id: `blog/memberShip/${uniqueFilename}`, tags: `blog` }, // directory and tags are optional
+          function(err, image) {
+            if (err) return res.send(err)
+          
+            // remove file from server
+            const fs = require('fs');
+            fs.unlinkSync(path);
+            
+          }
+        )
+      }
+
+    try {
+        let updateIs = {
+            memberShipName: memberShipName,
+            logo: file == undefined ? "" : 'https://res.cloudinary.com/dckj2yfap/image/upload/v1601267438/blog/memberShip/'+uniqueFilename,
+        }
+        var record = await memberModelSchema.find({ _id: memberShipId });
+        if(record.length == 1){
+            let updateData = await memberModelSchema.findByIdAndUpdate(memberShipId,updateIs);
+            res.status(200).json({ IsSuccess: true , Data: 1 , Message: "MemberShip Updated" });
+        }else{
+            res.status(200).json({ IsSuccess: true , Data: 0 , Message: "MemberShip Not Found" });
+        }    
+    } catch (error) {
+        res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
 router.post("/getAllMemberCategory" ,async function(req,res,next){
     try {
         var record = await memberModelSchema.find();
@@ -978,6 +1202,239 @@ router.post("/getAllMemberCategory" ,async function(req,res,next){
         }
     } catch (error) {
         res.status(500).json({ IsSuccess: false , Message: error.message });
+    }
+});
+
+//API from hansil GetID
+
+router.post('/getsingleid', async function(req,res,next) {
+    const id = req.body.id;
+    console.log(id);
+    try{
+    var name_id = await directoryData.find({_id : id});
+    if(name_id){
+    res.status(200).json({ Message : "Member Found", Data : name_id, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Member Not Found", Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err)
+    {
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+    
+router.post('/getsingleoffer', async function(req,res,next) {
+    const id2 = req.body.id;
+    try{
+    var offer_id = await offerSchema.find({_id : id2});
+    if(offer_id){
+    res.status(200).json({ Message : "Offer Found", Data : offer_id, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Offer Not Found", Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+})
+    
+router.post('/getsinglenews', async function(req,res, next) {
+    const id3 = req.body.id;
+    console.log(id);
+    try{
+    var news = await newsModelSchema.find({_id : id3});
+    console.log(news);
+    if(news){
+    res.status(200).json({ Message : "News Found", Data : news, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "News Not Found", Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err)
+    {
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+
+router.post('/getsingleevent', async function(req,res,next) {
+    const id4 = req.body.id;
+    try{
+    var eventid = await eventSchema.find({_id : id4});
+    if(eventid){
+    res.status(200).json({ Message : "Event Found", Data : eventid, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Event Not Found", Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+    
+router.post('/getsinglesuccess', async function(req,res,next) {
+    const id5 = req.body.id;
+    try{
+    var succid = await successStorySchema.find({_id : id5});
+    if(succid){
+    res.status(200).json({ Message : "Success Story Found", Data : succid, IsSuccess : true});
+    }
+    else {
+    res.status(200).json({ Message : "Success Story Not Found", Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+    
+router.post('/getsinglemembership', async function(req,res,next) {
+    const id6 = req.body.id;
+    try{
+    var memid = await memberModelSchema.find({_id : id6});
+    if(memid){
+    res.status(200).json({ Message : "Membership Found" , Data : memid, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Membership Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+    
+router.post('/getsinglebuscat', async function(req,res,next) {
+    const id7 = req.body.id;
+    try{
+    var buscaid = await businessCategorySchema.find({_id : id7});
+    if(buscaid){
+    res.status(200).json({ Message : "Business Category Found" , Data : buscaid, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Business Category Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+
+router.post('/getsinglecategory', async function(req,res,next) {
+    const id8 = req.body.id;
+    try{
+    var catid = await newsCategorySchema.find({_id : id8});
+    if(catid){
+    res.status(200).json({ Message : "Category Found" , Data : catid, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "Category Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch(err){
+    res.status(500).json({ Message: error.message, IsSuccess: false });
+    }
+});
+
+// DELETE API FROM HANSIL  -  21/12/2020
+
+router.post('/delbanner' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await bannerSchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+    }
+});
+    
+router.post('/delbuscategory' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await businessCategorySchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+    }
+});
+
+router.post('/delcategory' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await newsCategorySchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+    }
+});
+    
+router.post('/delevent' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await eventSchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+    }
+});
+    
+router.post('/delmembership' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await memberModelSchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
+    }
+});
+
+router.post('/delsuccess' ,async function(req,res,next) {
+    var id = req.body.id;
+    try {
+    let data = await successStorySchema.findByIdAndDelete(id);
+    if(data) {
+    res.status(200).json({ Message : "Deleted Successfully" ,Data : 1, IsSuccess : true});
+    }
+    else{
+    res.status(200).json({ Message : "User Not Found" , Data : 0, IsSuccess : true});
+    }
+    }
+    catch (err){
+    res.status(500).json({ Message: err.message, Data: 0, IsSuccess: false });
     }
 });
 
